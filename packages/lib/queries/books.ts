@@ -184,12 +184,15 @@ export const updateBookProgress = async (
 ): Promise<BookProgress> => {
   const { data, error } = await supabase
     .from("book_progress")
-    .upsert({
-      user_id: userId,
-      book_id: bookId,
-      current_page: currentPage,
-      last_read_at: new Date().toISOString(),
-    })
+    .upsert(
+      {
+        user_id: userId,
+        book_id: bookId,
+        current_page: currentPage,
+        last_read_at: new Date().toISOString(),
+      },
+      { onConflict: "user_id,book_id" }
+    )
     .select()
     .single()
 

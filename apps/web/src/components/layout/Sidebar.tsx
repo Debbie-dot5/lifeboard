@@ -1,5 +1,6 @@
 "use client"
 
+import { useState } from "react"
 import Link from "next/link"
 import { usePathname } from "next/navigation"
 import {
@@ -11,6 +12,8 @@ import {
   Flame,
   Library,
   Settings,
+  PanelLeftClose,
+  PanelLeftOpen,
 } from "lucide-react"
 import NotificationBell from "@/components/modules/reminders/NotificationBell"
 
@@ -26,18 +29,27 @@ const navItems = [
 
 const Sidebar = () => {
   const pathname = usePathname()
+  const [collapsed, setCollapsed] = useState(false)
 
   return (
-    <aside className="w-64 h-full bg-[#13131F] border-r border-white/5 flex flex-col">
+    <aside
+      className={`${collapsed ? "w-16" : "w-64"} h-full bg-[#13131F] border-r border-white/5 flex flex-col transition-all duration-300 ease-in-out`}
+    >
       {/* Logo */}
-      <div className="p-6 border-b border-white/5 flex items-center justify-between">
-        <div>
-          <h1 className="text-xl font-bold text-white tracking-tight">
-            <span className="text-[#6C47FF]">Life</span>board
-          </h1>
-          <p className="text-xs text-white/40 mt-0.5">Your Personal Life OS</p>
-        </div>
-        <NotificationBell />
+      <div className={`${collapsed ? "p-4 justify-center" : "p-6 justify-between"} border-b border-white/5 flex items-center`}>
+        {collapsed ? (
+          <span className="text-xl font-bold text-[#6C47FF]">L</span>
+        ) : (
+          <>
+            <div>
+              <h1 className="text-xl font-bold text-white tracking-tight">
+                <span className="text-[#6C47FF]">Life</span>board
+              </h1>
+              <p className="text-xs text-white/40 mt-0.5">Your Personal Life OS</p>
+            </div>
+            <NotificationBell />
+          </>
+        )}
       </div>
 
       {/* Nav */}
@@ -48,27 +60,37 @@ const Sidebar = () => {
             <Link
               key={href}
               href={href}
-              className={`flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
+              title={collapsed ? label : undefined}
+              className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-medium transition-all ${
                 isActive
                   ? "bg-[#6C47FF] text-white"
                   : "text-white/50 hover:text-white hover:bg-white/5"
               }`}
             >
               <Icon size={18} />
-              {label}
+              {!collapsed && <span>{label}</span>}
             </Link>
           )
         })}
       </nav>
 
-      {/* Settings */}
-      <div className="p-4 border-t border-white/5">
+      {/* Footer */}
+      <div className="p-4 border-t border-white/5 space-y-1">
+        <button
+          onClick={() => setCollapsed(!collapsed)}
+          title={collapsed ? "Expand sidebar" : "Collapse sidebar"}
+          className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 transition-all w-full`}
+        >
+          {collapsed ? <PanelLeftOpen size={18} /> : <PanelLeftClose size={18} />}
+          {!collapsed && <span>Collapse</span>}
+        </button>
         <Link
           href="/settings"
-          className="flex items-center gap-3 px-3 py-2.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 transition-all"
+          title={collapsed ? "Settings" : undefined}
+          className={`flex items-center ${collapsed ? "justify-center" : "gap-3"} px-3 py-2.5 rounded-lg text-sm font-medium text-white/50 hover:text-white hover:bg-white/5 transition-all`}
         >
           <Settings size={18} />
-          Settings
+          {!collapsed && <span>Settings</span>}
         </Link>
       </div>
     </aside>

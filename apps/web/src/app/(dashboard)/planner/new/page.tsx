@@ -60,7 +60,7 @@ const NewPlanPage = () => {
   }
 
   return (
-    <div className="p-8 max-w-3xl">
+    <div className="p-8">
       {/* Back button */}
       <button
         onClick={() => router.push("/planner")}
