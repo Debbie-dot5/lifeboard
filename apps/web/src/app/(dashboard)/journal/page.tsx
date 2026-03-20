@@ -87,7 +87,7 @@ const JournalPage = () => {
   }
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="p-8">
       {/* Header */}
       <div className="flex items-start justify-between mb-6">
         <div>

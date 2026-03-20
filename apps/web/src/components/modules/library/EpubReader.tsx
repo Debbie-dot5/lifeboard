@@ -50,11 +50,15 @@ const EpubReader = ({ fileUrl, currentPage, onPageChange, onTotalPagesDetected, 
   // Initialize EPUB
   useEffect(() => {
     let mounted = true
+    let blobUrl: string | null = null
     const init = async () => {
       if (!containerRef.current) return
 
       const ePub = (await import("epubjs")).default
-      const book = ePub(fileUrl)
+      const response = await fetch(fileUrl)
+      const blob = await response.blob()
+      blobUrl = URL.createObjectURL(blob)
+      const book = ePub(blobUrl)
       bookRef.current = book
 
       const rendition = book.renderTo(containerRef.current, {
@@ -62,6 +66,7 @@ const EpubReader = ({ fileUrl, currentPage, onPageChange, onTotalPagesDetected, 
         height: "100%",
         spread: "none",
         flow: "paginated",
+        allowScriptedContent: true,
       })
       renditionRef.current = rendition
 
@@ -118,6 +123,7 @@ const EpubReader = ({ fileUrl, currentPage, onPageChange, onTotalPagesDetected, 
         bookRef.current.destroy()
         bookRef.current = null
       }
+      if (blobUrl) URL.revokeObjectURL(blobUrl)
     }
   }, [fileUrl]) // Only re-init when file changes
 

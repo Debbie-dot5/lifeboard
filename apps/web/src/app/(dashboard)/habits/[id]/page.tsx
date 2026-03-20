@@ -89,7 +89,7 @@ const HabitDetailPage = () => {
 
   if (isLoading || !habit) {
     return (
-      <div className="p-8 max-w-5xl">
+      <div className="p-8">
         <div className="flex items-center justify-center py-20">
           <div className="w-6 h-6 border-2 border-[#6C47FF] border-t-transparent rounded-full animate-spin" />
         </div>
@@ -98,7 +98,7 @@ const HabitDetailPage = () => {
   }
 
   return (
-    <div className="p-8 max-w-5xl">
+    <div className="p-8">
       {/* Back button */}
       <button
         onClick={() => router.push("/habits")}
