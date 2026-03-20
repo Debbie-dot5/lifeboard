@@ -46,7 +46,9 @@ export const queryKeys = {
     all: (userId: string) => ["books", userId] as const,
     book: (userId: string, bookId: string) => ["books", userId, bookId] as const,
     progress: (userId: string, bookId: string) => ["books", userId, bookId, "progress"] as const,
+    notes: (userId: string, bookId: string) => ["books", userId, bookId, "notes"] as const,
     goals: (userId: string) => ["books", userId, "goals"] as const,
+    readingDates: (userId: string) => ["books", userId, "readingDates"] as const,
   },
 
   // ── DASHBOARD ────────────────────────────────────────────────────────────

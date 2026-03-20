@@ -15,12 +15,12 @@
     "build:web": "turbo build --filter=web"
   },
   "devDependencies": {
-    "turbo": "^2.0.0",
-    "typescript": "^5.4.0",
-    "prettier": "^3.2.0"
+    "prettier": "^3.2.0",
+    "turbo": "^2.8.16",
+    "typescript": "^5.4.0"
   },
+  "packageManager": "npm@10.9.3",
   "engines": {
     "node": ">=18.0.0"
   }
-  
 }

@@ -65,9 +65,10 @@ const useBooksHook = (userId: string) => {
 
   // ── DELETE BOOK ────────────────────────────────────────────────────────────
   const deleteBookMutation = useMutation({
-    mutationFn: (bookId: string) => deleteBook(supabase, bookId),
+    mutationFn: ({ bookId, fileUrl, coverUrl }: { bookId: string; fileUrl: string; coverUrl: string | null }) =>
+      deleteBook(supabase, userId, bookId, fileUrl, coverUrl),
 
-    onMutate: async (bookId) => {
+    onMutate: async ({ bookId }) => {
       await queryClient.cancelQueries({ queryKey: queryKeys.books.all(userId) })
       const previous = queryClient.getQueryData<Book[]>(queryKeys.books.all(userId))
 
