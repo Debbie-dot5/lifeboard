@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState, useCallback } from "react"
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react"
+import { createClient } from "@/lib/supabase/client"
 
 type Props = {
   fileUrl: string
@@ -41,6 +42,8 @@ const EpubReader = ({ fileUrl, currentPage, onPageChange, onTotalPagesDetected, 
   const bookRef = useRef<any>(null)
   const renditionRef = useRef<any>(null)
   const [isLoading, setIsLoading] = useState(true)
+  const [loadingMessage, setLoadingMessage] = useState("Loading book...")
+  const [error, setError] = useState<string | null>(null)
   const [currentLocation, setCurrentLocation] = useState<string | null>(null)
   const [totalLocations, setTotalLocations] = useState(0)
   const [displayedPage, setDisplayedPage] = useState(currentPage)
@@ -50,65 +53,99 @@ const EpubReader = ({ fileUrl, currentPage, onPageChange, onTotalPagesDetected, 
   // Initialize EPUB
   useEffect(() => {
     let mounted = true
-    let blobUrl: string | null = null
     const init = async () => {
       if (!containerRef.current) return
 
-      const ePub = (await import("epubjs")).default
-      const response = await fetch(fileUrl)
-      const blob = await response.blob()
-      blobUrl = URL.createObjectURL(blob)
-      const book = ePub(blobUrl)
-      bookRef.current = book
+      try {
+        setIsLoading(true)
+        setError(null)
+        setLoadingMessage("Loading book...")
 
-      const rendition = book.renderTo(containerRef.current, {
-        width: "100%",
-        height: "100%",
-        spread: "none",
-        flow: "paginated",
-        allowScriptedContent: true,
-      })
-      renditionRef.current = rendition
+        // Get Supabase access token for private bucket access
+        const supabase = createClient()
+        const { data: { session } } = await supabase.auth.getSession()
+        const accessToken = session?.access_token ?? ""
 
-      // Apply theme
-      rendition.themes.override("font-size", `${fontSize}px`)
-      rendition.themes.override("font-family", "Georgia, 'Times New Roman', serif")
-      rendition.themes.override("color", config.body.color)
-      rendition.themes.override("background", config.body.background)
-      rendition.themes.override("line-height", "1.7")
+        // Fetch the entire EPUB file as ArrayBuffer
+        setLoadingMessage("Downloading book file...")
+        const response = await fetch(fileUrl, {
+          headers: accessToken
+            ? { Authorization: `Bearer ${accessToken}` }
+            : {},
+        })
 
-      // Listen for location changes
-      rendition.on("relocated", (location: any) => {
-        if (!mounted) return
-        const start = location.start
-        if (start?.index !== undefined) {
-          setDisplayedPage(start.index + 1)
-          setCurrentLocation(start.cfi)
-          onPageChange(start.index + 1)
+        if (!response.ok) {
+          throw new Error(`Failed to download book (${response.status})`)
         }
-      })
 
-      // Generate locations for page estimation
-      await book.ready
-      const locations = await book.locations.generate(1024)
-      if (mounted) {
-        setTotalLocations(locations.length)
-        onTotalPagesDetected(locations.length)
-      }
+        const arrayBuffer = await response.arrayBuffer()
+        if (!mounted) return
 
-      // Display starting location
-      if (currentPage > 1) {
-        const spine = book.spine as any
-        if (spine?.get && spine.get(currentPage - 1)) {
-          await rendition.display(spine.get(currentPage - 1).href)
+        // Pass ArrayBuffer directly to epubjs — this avoids epubjs
+        // trying to resolve internal EPUB paths as separate HTTP requests
+        setLoadingMessage("Rendering book...")
+        const ePub = (await import("epubjs")).default
+        const book = ePub(arrayBuffer)
+        bookRef.current = book
+
+        // Wait for book to be ready before rendering
+        await book.ready
+        if (!mounted || !containerRef.current) return
+
+        const rendition = book.renderTo(containerRef.current, {
+          width: "100%",
+          height: "100%",
+          spread: "none",
+          flow: "paginated",
+          allowScriptedContent: true,
+        })
+        renditionRef.current = rendition
+
+        // Apply theme
+        rendition.themes.override("font-size", `${fontSize}px`)
+        rendition.themes.override("font-family", "Georgia, 'Times New Roman', serif")
+        rendition.themes.override("color", config.body.color)
+        rendition.themes.override("background", config.body.background)
+        rendition.themes.override("line-height", "1.7")
+
+        // Listen for location changes
+        rendition.on("relocated", (location: any) => {
+          if (!mounted) return
+          const start = location.start
+          if (start?.index !== undefined) {
+            setDisplayedPage(start.index + 1)
+            setCurrentLocation(start.cfi)
+            onPageChange(start.index + 1)
+          }
+        })
+
+        // Generate locations for page estimation
+        const locations = await book.locations.generate(1024)
+        if (mounted) {
+          setTotalLocations(locations.length)
+          onTotalPagesDetected(locations.length)
+        }
+
+        // Display starting location
+        if (currentPage > 1) {
+          const spine = book.spine as any
+          if (spine?.get && spine.get(currentPage - 1)) {
+            await rendition.display(spine.get(currentPage - 1).href)
+          } else {
+            await rendition.display()
+          }
         } else {
           await rendition.display()
         }
-      } else {
-        await rendition.display()
-      }
 
-      if (mounted) setIsLoading(false)
+        if (mounted) setIsLoading(false)
+      } catch (err: any) {
+        console.error("EPUB init error:", err)
+        if (mounted) {
+          setError(err?.message || "Failed to load book")
+          setIsLoading(false)
+        }
+      }
     }
 
     init()
@@ -123,7 +160,6 @@ const EpubReader = ({ fileUrl, currentPage, onPageChange, onTotalPagesDetected, 
         bookRef.current.destroy()
         bookRef.current = null
       }
-      if (blobUrl) URL.revokeObjectURL(blobUrl)
     }
   }, [fileUrl]) // Only re-init when file changes
 
@@ -139,28 +175,43 @@ const EpubReader = ({ fileUrl, currentPage, onPageChange, onTotalPagesDetected, 
   // Keyboard navigation
   useEffect(() => {
     const handler = (e: KeyboardEvent) => {
+      if (!renditionRef.current) return
       if (e.key === "ArrowRight" || e.key === " ") {
         e.preventDefault()
-        renditionRef.current?.next()
+        renditionRef.current.next()
       } else if (e.key === "ArrowLeft") {
         e.preventDefault()
-        renditionRef.current?.prev()
+        renditionRef.current.prev()
       }
     }
     window.addEventListener("keydown", handler)
     return () => window.removeEventListener("keydown", handler)
   }, [])
 
-  const goNext = useCallback(() => renditionRef.current?.next(), [])
-  const goPrev = useCallback(() => renditionRef.current?.prev(), [])
+  const goNext = useCallback(() => {
+    if (!renditionRef.current) return
+    renditionRef.current.next()
+  }, [])
+
+  const goPrev = useCallback(() => {
+    if (!renditionRef.current) return
+    renditionRef.current.prev()
+  }, [])
 
   return (
     <div className="flex flex-col h-full" style={{ backgroundColor: config.containerBg }}>
       {/* EPUB render container */}
       <div className="flex-1 relative overflow-hidden">
         {isLoading && (
-          <div className="absolute inset-0 flex items-center justify-center z-10">
+          <div className="absolute inset-0 flex flex-col items-center justify-center z-10 gap-3">
             <Loader2 className="w-8 h-8 animate-spin text-white/20" />
+            <p className="text-xs text-white/30">{loadingMessage}</p>
+          </div>
+        )}
+        {error && (
+          <div className="absolute inset-0 flex flex-col items-center justify-center z-10 gap-2">
+            <p className="text-sm text-red-400">{error}</p>
+            <p className="text-xs text-white/30">Please go back and try again.</p>
           </div>
         )}
         <div ref={containerRef} className="w-full h-full" />
