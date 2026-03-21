@@ -9,7 +9,7 @@
   },
   "dependencies": {
     "@supabase/supabase-js": "^2.43.0",
-    "@lifeboard/types": "*"
+    "@lifeboard/types": "workspace:*"
   },
   "devDependencies": {
     "typescript": "^5.4.0"

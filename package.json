@@ -1,10 +1,6 @@
 {
   "name": "lifeboard",
   "private": true,
-  "workspaces": [
-    "apps/*",
-    "packages/*"
-  ],
   "scripts": {
     "dev": "turbo dev",
     "build": "turbo build",
@@ -19,7 +15,13 @@
     "turbo": "^2.8.16",
     "typescript": "^5.4.0"
   },
-  "packageManager": "npm@10.9.3",
+  "packageManager": "pnpm@10.6.5",
+  "pnpm": {
+    "overrides": {
+      "@types/react": "^18.3.28",
+      "@types/react-dom": "^18.3.5"
+    }
+  },
   "engines": {
     "node": ">=18.0.0"
   }
