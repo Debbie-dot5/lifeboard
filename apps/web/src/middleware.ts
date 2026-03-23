@@ -34,10 +34,10 @@ export const middleware = async (request: NextRequest) => {
 
   const { pathname } = request.nextUrl
 
-  // Authenticated users on auth routes → redirect to /tasks
+  // Authenticated users on auth routes → redirect to /dashboard
   if (user && authRoutes.includes(pathname)) {
     const url = request.nextUrl.clone()
-    url.pathname = "/tasks"
+    url.pathname = "/dashboard"
     return NextResponse.redirect(url)
   }
 

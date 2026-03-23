@@ -18,7 +18,7 @@ import {
 import NotificationBell from "@/components/modules/reminders/NotificationBell"
 
 const navItems = [
-  { href: "/", label: "Dashboard", icon: LayoutDashboard },
+  { href: "/dashboard", label: "Dashboard", icon: LayoutDashboard },
   { href: "/tasks", label: "Tasks", icon: CheckSquare },
   { href: "/journal", label: "Journal", icon: BookOpen },
   { href: "/reminders", label: "Reminders", icon: Bell },
