@@ -150,13 +150,15 @@ const AddReminderModal = ({
   }
 
   const inputClass =
-    "w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/20 focus:outline-none focus:border-[#6C47FF] transition-colors"
+    "w-full rounded-lg px-3 py-2 text-sm text-white placeholder-white/20 glass-input"
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm flex items-center justify-center z-50">
-      <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-6 w-full max-w-md mx-4">
+    <div className="fixed inset-0 z-50 flex items-end md:items-center justify-center" style={{ background: "rgba(5, 5, 16, 0.75)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}>
+      <div className="rounded-t-2xl md:rounded-2xl p-6 w-full md:max-w-md md:mx-4 max-h-[90vh] overflow-y-auto safe-bottom animate-slide-in-bottom md:animate-none" style={{ background: "rgba(15, 12, 30, 0.85)", border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)", boxShadow: "0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(108,71,255,0.1)" }}>
+        {/* Swipe handle (mobile) */}
+        <div className="md:hidden mx-auto mb-3 h-1 w-10 rounded-full bg-white/20" />
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: "16px", background: "linear-gradient(180deg, rgba(108,71,255,0.06) 0%, transparent 100%)" }}>
           <h2 className="text-lg font-bold text-white">
             {editingReminder ? "Edit Reminder" : "New Reminder"}
           </h2>
@@ -179,9 +181,14 @@ const AddReminderModal = ({
               }}
               className={`flex-1 px-3 py-2 rounded-lg text-sm font-medium transition-all ${
                 type === opt.value
-                  ? "bg-[#6C47FF] text-white"
-                  : "bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/60"
+                  ? "text-white"
+                  : "text-white/40 hover:text-white/60"
               }`}
+              style={
+                type === opt.value
+                  ? { background: "rgba(108,71,255,0.2)", border: "1px solid rgba(108,71,255,0.3)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1), 0 0 20px rgba(108,71,255,0.15)" }
+                  : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+              }
             >
               {opt.label}
             </button>
@@ -252,9 +259,14 @@ const AddReminderModal = ({
                       onClick={() => setRecurrence(opt.value)}
                       className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
                         recurrence === opt.value
-                          ? "bg-[#6C47FF] text-white"
-                          : "bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/60"
+                          ? "text-white"
+                          : "text-white/40 hover:text-white/60"
                       }`}
+                      style={
+                        recurrence === opt.value
+                          ? { background: "rgba(108,71,255,0.2)", border: "1px solid rgba(108,71,255,0.3)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)" }
+                          : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+                      }
                     >
                       {opt.label}
                     </button>
@@ -288,14 +300,16 @@ const AddReminderModal = ({
         <div className="flex items-center justify-end gap-3 mt-6">
           <button
             onClick={onClose}
-            className="px-4 py-2 text-sm text-white/40 hover:text-white transition-colors"
+            className="px-4 py-2 text-sm text-white/40 hover:text-white transition-colors rounded-lg"
+            style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.1)" }}
           >
             Cancel
           </button>
           <button
             onClick={handleSubmit}
             disabled={isPending}
-            className="px-5 py-2 bg-[#6C47FF] text-white text-sm font-medium rounded-lg hover:bg-[#5835FF] transition-colors disabled:opacity-50"
+            className="px-5 py-2 text-white text-sm font-medium rounded-lg transition-all disabled:opacity-50"
+            style={{ background: "linear-gradient(135deg, rgba(108,71,255,0.9), rgba(79,47,224,0.9))", border: "1px solid rgba(108,71,255,0.5)", boxShadow: "0 4px 20px rgba(108,71,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2)" }}
           >
             {isPending ? "Saving..." : editingReminder ? "Update" : "Save"}
           </button>

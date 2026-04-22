@@ -1,11 +1,7 @@
 "use client";
 
-import { Sora, DM_Sans } from "next/font/google";
 import Link from "next/link";
 import { useRef, useState, useEffect } from "react";
-
-const sora = Sora({ subsets: ["latin"], weight: ["400", "600", "700", "800"] });
-const dmSans = DM_Sans({ subsets: ["latin"], weight: ["400", "500", "600"] });
 
 /* ------------------------------------------------------------------ */
 /*  useInView hook — triggers once on scroll into view                 */
@@ -452,6 +448,19 @@ export default function LandingPage() {
   const s3 = useInView(0.2);
   const s4 = useInView(0.3);
 
+  const [isMobile, setIsMobile] = useState(false);
+  const [isTablet, setIsTablet] = useState(false);
+  useEffect(() => {
+    const update = () => {
+      const w = window.innerWidth;
+      setIsMobile(w < 768);
+      setIsTablet(w >= 768 && w < 1024);
+    };
+    update();
+    window.addEventListener("resize", update);
+    return () => window.removeEventListener("resize", update);
+  }, []);
+
   return (
     <>
       <style dangerouslySetInnerHTML={{ __html: keyframes }} />
@@ -577,66 +586,76 @@ export default function LandingPage() {
           />
 
           {/* Floating UI cards */}
-          <div
-            style={{ ...floatingCardBase, top: "12%", left: "8%", width: 200, animation: "float1 4s ease-in-out infinite alternate" }}
-          >
-            <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
-              <div style={{ width: 16, height: 16, borderRadius: 4, border: "2px solid #6C47FF", flexShrink: 0 }} />
-              <span className={dmSans.className} style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>Learn Design</span>
-            </div>
-            <div className={dmSans.className} style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginTop: 6, paddingLeft: 24 }}>2hrs · Focus block</div>
-          </div>
-
-          <div style={{ ...floatingCardBase, top: "14%", right: "10%", animation: "float2 5s ease-in-out infinite alternate" }}>
-            <div className={dmSans.className} style={{ fontSize: 20, display: "flex", alignItems: "center", gap: 8 }}>
-              🔥 <span style={{ color: "#F59E0B", fontWeight: 600, fontSize: 14 }}>12 day streak</span>
-            </div>
-            <div className={dmSans.className} style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginTop: 4 }}>Reading · 30 min/day</div>
-          </div>
-
-          <div style={{ ...floatingCardBase, bottom: "16%", left: "6%", width: 220, animation: "float3 6s ease-in-out infinite alternate" }}>
-            <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
-              <span className={dmSans.className} style={{ color: "#10B981", fontSize: 11, fontWeight: 600 }}>Mar 21, 2026</span>
-              <span style={{ fontSize: 16 }}>😊</span>
-            </div>
-            <div className={dmSans.className} style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, marginTop: 8, lineHeight: 1.5 }}>
-              Today was a good day. I finally finished the project I&apos;ve been...
-            </div>
-          </div>
-
-          <div style={{ ...floatingCardBase, bottom: "14%", right: "8%", width: 200, animation: "float4 7s ease-in-out infinite alternate" }}>
-            <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
-              <div style={{ width: 36, height: 48, borderRadius: 4, background: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)", flexShrink: 0 }} />
-              <div>
-                <div className={dmSans.className} style={{ color: "rgba(255,255,255,0.7)", fontSize: 12, fontWeight: 600 }}>Chapter 4</div>
-                <div className={dmSans.className} style={{ color: "rgba(255,255,255,0.35)", fontSize: 11 }}>34% complete</div>
+          {!isMobile && (
+            <>
+              <div
+                style={{ ...floatingCardBase, top: "12%", left: "8%", width: 200, animation: "float1 4s ease-in-out infinite alternate" }}
+              >
+                <div style={{ display: "flex", alignItems: "center", gap: 8 }}>
+                  <div style={{ width: 16, height: 16, borderRadius: 4, border: "2px solid #6C47FF", flexShrink: 0 }} />
+                  <span className="" style={{ color: "rgba(255,255,255,0.7)", fontSize: 13 }}>Learn Design</span>
+                </div>
+                <div className="" style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginTop: 6, paddingLeft: 24 }}>2hrs · Focus block</div>
               </div>
-            </div>
-            <div style={{ marginTop: 10, height: 3, borderRadius: 2, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
-              <div style={{ width: "34%", height: "100%", borderRadius: 2, background: "linear-gradient(90deg, #F59E0B, #D97706)" }} />
-            </div>
-          </div>
 
-          <div style={{ ...floatingCardBase, top: "50%", right: "4%", transform: "translateY(-50%)", animation: "float5 5.5s ease-in-out infinite alternate" }}>
-            <div className={dmSans.className} style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
-              🎂 <span style={{ color: "#EC4899", fontWeight: 600 }}>Mom&apos;s Birthday</span>
-            </div>
-            <div className={dmSans.className} style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginTop: 4 }}>in 3 days</div>
-          </div>
+              <div style={{ ...floatingCardBase, top: "14%", right: "10%", animation: "float2 5s ease-in-out infinite alternate" }}>
+                <div className="" style={{ fontSize: 20, display: "flex", alignItems: "center", gap: 8 }}>
+                  🔥 <span className="font-mono" style={{ color: "#F59E0B", fontWeight: 600, fontSize: 14 }}>12 day streak</span>
+                </div>
+                <div className="" style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginTop: 4 }}>Reading · 30 min/day</div>
+              </div>
+
+              {!isTablet && (
+                <div style={{ ...floatingCardBase, bottom: "16%", left: "6%", width: 220, animation: "float3 6s ease-in-out infinite alternate" }}>
+                  <div style={{ display: "flex", justifyContent: "space-between", alignItems: "center" }}>
+                    <span className="" style={{ color: "#10B981", fontSize: 11, fontWeight: 600 }}>Mar 21, 2026</span>
+                    <span style={{ fontSize: 16 }}>😊</span>
+                  </div>
+                  <div className="" style={{ color: "rgba(255,255,255,0.5)", fontSize: 12, marginTop: 8, lineHeight: 1.5 }}>
+                    Today was a good day. I finally finished the project I&apos;ve been...
+                  </div>
+                </div>
+              )}
+
+              {!isTablet && (
+                <div style={{ ...floatingCardBase, bottom: "14%", right: "8%", width: 200, animation: "float4 7s ease-in-out infinite alternate" }}>
+                  <div style={{ display: "flex", alignItems: "center", gap: 10 }}>
+                    <div style={{ width: 36, height: 48, borderRadius: 4, background: "linear-gradient(135deg, #F59E0B 0%, #D97706 100%)", flexShrink: 0 }} />
+                    <div>
+                      <div className="" style={{ color: "rgba(255,255,255,0.7)", fontSize: 12, fontWeight: 600 }}>Chapter 4</div>
+                      <div className="font-mono" style={{ color: "rgba(255,255,255,0.35)", fontSize: 11 }}>34% complete</div>
+                    </div>
+                  </div>
+                  <div style={{ marginTop: 10, height: 3, borderRadius: 2, background: "rgba(255,255,255,0.08)", overflow: "hidden" }}>
+                    <div style={{ width: "34%", height: "100%", borderRadius: 2, background: "linear-gradient(90deg, #F59E0B, #D97706)" }} />
+                  </div>
+                </div>
+              )}
+
+              {!isTablet && (
+                <div style={{ ...floatingCardBase, top: "50%", right: "4%", transform: "translateY(-50%)", animation: "float5 5.5s ease-in-out infinite alternate" }}>
+                  <div className="" style={{ display: "flex", alignItems: "center", gap: 8, fontSize: 13 }}>
+                    🎂 <span style={{ color: "#EC4899", fontWeight: 600 }}>Mom&apos;s Birthday</span>
+                  </div>
+                  <div className="" style={{ color: "rgba(255,255,255,0.35)", fontSize: 11, marginTop: 4 }}>in 3 days</div>
+                </div>
+              )}
+            </>
+          )}
 
           {/* Central content */}
           <div style={{ position: "relative", zIndex: 2, textAlign: "center", maxWidth: 720, padding: "0 24px" }}>
             {/* Label */}
             <div style={{ display: "flex", alignItems: "center", justifyContent: "center", gap: 12, marginBottom: 28, animation: "fadeUp 0.6s ease-out both" }}>
               <div style={{ width: 24, height: 1, background: "#6C47FF" }} />
-              <span className={dmSans.className} style={{ fontSize: 11, letterSpacing: "0.3em", color: "#6C47FF", textTransform: "uppercase", fontWeight: 600 }}>
+              <span className="" style={{ fontSize: 11, letterSpacing: "0.3em", color: "#6C47FF", textTransform: "uppercase", fontWeight: 600 }}>
                 Your Personal Life OS
               </span>
               <div style={{ width: 24, height: 1, background: "#6C47FF" }} />
             </div>
 
             {/* Main headline */}
-            <h1 className={sora.className} style={{ fontSize: "clamp(40px, 6vw, 72px)", fontWeight: 800, lineHeight: 1.1, color: "white", margin: 0 }}>
+            <h1 className="font-display" style={{ fontSize: isMobile ? "clamp(32px, 8vw, 40px)" : isTablet ? "clamp(40px, 5vw, 52px)" : "clamp(40px, 6vw, 72px)", fontWeight: 800, lineHeight: 1.1, color: "white", margin: 0 }}>
               {["Everything", "you", "are."].map((word, i) => (
                 <span key={word} style={{ display: "inline-block", animation: `wordReveal 0.6s ease-out ${i * 0.15}s both`, marginRight: i < 2 ? "0.3em" : 0 }}>{word}</span>
               ))}
@@ -650,7 +669,7 @@ export default function LandingPage() {
             </h1>
 
             {/* Subtext */}
-            <p className={dmSans.className} style={{ fontSize: 16, color: "rgba(255,255,255,0.5)", marginTop: 24, animation: "fadeUp 0.6s ease-out 0.8s both", letterSpacing: "0.02em" }}>
+            <p className="" style={{ fontSize: 16, color: "rgba(255,255,255,0.5)", marginTop: 24, animation: "fadeUp 0.6s ease-out 0.8s both", letterSpacing: "0.02em" }}>
               Tasks &nbsp;·&nbsp; Journal &nbsp;·&nbsp; Habits &nbsp;·&nbsp; Plans &nbsp;·&nbsp; Books &nbsp;·&nbsp; Reminders
             </p>
 
@@ -658,9 +677,10 @@ export default function LandingPage() {
             <div style={{ marginTop: 40, animation: "fadeUp 0.6s ease-out 1.2s both" }}>
               <Link
                 href="/signup"
-                className={dmSans.className}
+                className=""
                 style={{
-                  display: "inline-block",
+                  display: isMobile ? "block" : "inline-block",
+                  width: isMobile ? "100%" : "auto",
                   background: "linear-gradient(135deg, #6C47FF, #4F2FE0)",
                   border: "1px solid rgba(108,71,255,0.5)",
                   padding: "14px 36px",
@@ -669,6 +689,7 @@ export default function LandingPage() {
                   fontWeight: 600,
                   color: "white",
                   textDecoration: "none",
+                  textAlign: "center",
                   animation: "pulseGlow 2s ease-in-out infinite",
                   transition: "transform 0.2s ease, box-shadow 0.2s ease",
                   cursor: "pointer",
@@ -686,7 +707,7 @@ export default function LandingPage() {
             <svg width="20" height="20" viewBox="0 0 20 20" fill="none" style={{ opacity: 0.4 }}>
               <path d="M4 7l6 6 6-6" stroke="white" strokeWidth="1.5" strokeLinecap="round" strokeLinejoin="round" />
             </svg>
-            <span className={dmSans.className} style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.15em", textTransform: "uppercase" }}>scroll</span>
+            <span className="" style={{ fontSize: 10, color: "rgba(255,255,255,0.25)", letterSpacing: "0.15em", textTransform: "uppercase" }}>scroll</span>
           </div>
         </section>
 
@@ -741,7 +762,7 @@ export default function LandingPage() {
               position: "relative",
               zIndex: 1,
               display: "grid",
-              gridTemplateColumns: "1fr 1fr",
+              gridTemplateColumns: isMobile ? "1fr" : "1fr 1fr",
               gap: "clamp(40px, 5vw, 80px)",
               maxWidth: 1100,
               width: "100%",
@@ -759,7 +780,7 @@ export default function LandingPage() {
               <div style={{ display: "flex", alignItems: "center", gap: 12, marginBottom: 24 }}>
                 <div style={{ width: 24, height: 1, background: "#6C47FF" }} />
                 <span
-                  className={dmSans.className}
+                  className=""
                   style={{ fontSize: 11, letterSpacing: "0.3em", color: "#6C47FF", textTransform: "uppercase", fontWeight: 600 }}
                 >
                   The Problem
@@ -768,7 +789,7 @@ export default function LandingPage() {
 
               {/* Statement */}
               <h2
-                className={sora.className}
+                className="font-display"
                 style={{
                   fontSize: "clamp(32px, 4vw, 52px)",
                   fontWeight: 700,
@@ -801,7 +822,7 @@ export default function LandingPage() {
               ].map((p, i) => (
                 <div
                   key={i}
-                  className={dmSans.className}
+                  className=""
                   style={{
                     display: "flex",
                     alignItems: "center",
@@ -832,7 +853,7 @@ export default function LandingPage() {
               {/* Before: Chaos */}
               <div style={{ position: "relative", width: "42%", height: 320 }}>
                 <div
-                  className={dmSans.className}
+                  className=""
                   style={{
                     position: "absolute",
                     top: -24,
@@ -875,7 +896,7 @@ export default function LandingPage() {
                       {app.emoji}
                     </div>
                     <span
-                      className={dmSans.className}
+                      className=""
                       style={{ fontSize: 9, color: "rgba(255,255,255,0.25)" }}
                     >
                       {app.label}
@@ -910,7 +931,7 @@ export default function LandingPage() {
                   />
                 </svg>
                 <span
-                  className={dmSans.className}
+                  className=""
                   style={{
                     fontSize: 10,
                     color: "#6C47FF",
@@ -925,7 +946,7 @@ export default function LandingPage() {
               {/* After: Order */}
               <div style={{ position: "relative", width: "42%", minHeight: 280 }}>
                 <div
-                  className={dmSans.className}
+                  className=""
                   style={{
                     position: "absolute",
                     top: -24,
@@ -976,7 +997,7 @@ export default function LandingPage() {
                         {app.emoji}
                       </div>
                       <span
-                        className={dmSans.className}
+                        className=""
                         style={{ fontSize: 9, color: "rgba(255,255,255,0.4)" }}
                       >
                         {app.label}
@@ -1034,7 +1055,7 @@ export default function LandingPage() {
               }}
             >
               <h2
-                className={sora.className}
+                className="font-display"
                 style={{
                   fontSize: "clamp(32px, 4.5vw, 48px)",
                   fontWeight: 800,
@@ -1055,7 +1076,7 @@ export default function LandingPage() {
                 One home.
               </h2>
               <p
-                className={dmSans.className}
+                className=""
                 style={{ fontSize: 16, color: "rgba(255,255,255,0.45)", margin: 0 }}
               >
                 Everything you need to run your life.
@@ -1066,7 +1087,7 @@ export default function LandingPage() {
             <div
               style={{
                 display: "grid",
-                gridTemplateColumns: "repeat(3, 1fr)",
+                gridTemplateColumns: isMobile ? "1fr" : isTablet ? "repeat(2, 1fr)" : "repeat(3, 1fr)",
                 gap: 18,
               }}
             >
@@ -1077,7 +1098,7 @@ export default function LandingPage() {
                     background: "rgba(255,255,255,0.02)",
                     border: "1px solid rgba(255,255,255,0.06)",
                     borderRadius: 20,
-                    padding: "28px 24px",
+                    padding: isMobile ? "20px 16px" : "28px 24px",
                     textAlign: "left",
                     position: "relative",
                     overflow: "hidden",
@@ -1131,13 +1152,13 @@ export default function LandingPage() {
                   </div>
 
                   <h3
-                    className={sora.className}
+                    className="font-display"
                     style={{ fontSize: 17, fontWeight: 700, color: "white", margin: "0 0 6px 0" }}
                   >
                     {m.title}
                   </h3>
                   <p
-                    className={dmSans.className}
+                    className=""
                     style={{ fontSize: 14, color: "rgba(255,255,255,0.45)", lineHeight: 1.5, margin: 0 }}
                   >
                     {m.desc}
@@ -1239,7 +1260,7 @@ export default function LandingPage() {
 
             {/* Headline */}
             <h2
-              className={sora.className}
+              className="font-display"
               style={{
                 fontSize: "clamp(36px, 5.5vw, 64px)",
                 fontWeight: 800,
@@ -1251,7 +1272,7 @@ export default function LandingPage() {
               Your life, organized.
             </h2>
             <h2
-              className={sora.className}
+              className="font-display"
               style={{
                 fontSize: "clamp(36px, 5.5vw, 64px)",
                 fontWeight: 800,
@@ -1268,7 +1289,7 @@ export default function LandingPage() {
 
             {/* Subtext */}
             <p
-              className={dmSans.className}
+              className=""
               style={{
                 fontSize: 18,
                 color: "rgba(255,255,255,0.5)",
@@ -1285,6 +1306,7 @@ export default function LandingPage() {
             <div
               style={{
                 display: "flex",
+                flexDirection: isMobile ? "column" : "row",
                 alignItems: "center",
                 justifyContent: "center",
                 gap: 16,
@@ -1295,9 +1317,10 @@ export default function LandingPage() {
               {/* Primary CTA */}
               <Link
                 href="/signup"
-                className={dmSans.className}
+                className=""
                 style={{
-                  display: "inline-block",
+                  display: isMobile ? "block" : "inline-block",
+                  width: isMobile ? "100%" : "auto",
                   background: "linear-gradient(135deg, #6C47FF, #4F2FE0)",
                   border: "1px solid rgba(108,71,255,0.5)",
                   padding: "16px 40px",
@@ -1306,6 +1329,7 @@ export default function LandingPage() {
                   fontWeight: 600,
                   color: "white",
                   textDecoration: "none",
+                  textAlign: "center",
                   animation: "pulseGlow 2s ease-in-out infinite",
                   transition: "transform 0.2s ease, box-shadow 0.2s ease",
                   cursor: "pointer",
@@ -1325,9 +1349,10 @@ export default function LandingPage() {
               {/* Secondary — Ghost */}
               <Link
                 href="/login"
-                className={dmSans.className}
+                className=""
                 style={{
-                  display: "inline-block",
+                  display: isMobile ? "block" : "inline-block",
+                  width: isMobile ? "100%" : "auto",
                   background: "transparent",
                   border: "1px solid rgba(255,255,255,0.2)",
                   padding: "16px 36px",
@@ -1336,6 +1361,7 @@ export default function LandingPage() {
                   fontWeight: 600,
                   color: "rgba(255,255,255,0.7)",
                   textDecoration: "none",
+                  textAlign: "center",
                   transition: "border-color 0.2s ease, color 0.2s ease, transform 0.2s ease",
                   cursor: "pointer",
                 }}
@@ -1366,7 +1392,7 @@ export default function LandingPage() {
             }}
           >
             <span
-              className={dmSans.className}
+              className=""
               style={{ fontSize: 12, color: "rgba(255,255,255,0.2)", whiteSpace: "nowrap" }}
             >
               Built for the ones building their life on purpose. — Lifeboard

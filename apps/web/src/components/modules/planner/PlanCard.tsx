@@ -33,10 +33,17 @@ const PlanCard = ({ plan, onEdit, onDelete, onTogglePin, wide }: Props) => {
   return (
     <div
       onClick={() => router.push(`/planner/${plan.id}`)}
-      className={`group relative bg-[#13131F] border border-white/5 rounded-xl p-4 cursor-pointer
-        hover:border-[#6C47FF]/30 hover:shadow-[0_0_20px_rgba(108,71,255,0.08)] transition-all duration-200
-        ${wide ? "min-w-[320px] max-w-[360px]" : ""}`}
-      style={{ borderLeftColor: config.color, borderLeftWidth: "3px" }}
+      className={`group relative rounded-xl p-4 cursor-pointer transition-all duration-200
+        ${wide ? "min-w-[240px] md:min-w-[280px] lg:min-w-[320px] max-w-[360px]" : ""}`}
+      style={{
+        borderLeftColor: config.color,
+        borderLeftWidth: "3px",
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
+      }}
     >
       {/* Template badge */}
       <div className="flex items-center gap-2 mb-2">
@@ -59,7 +66,7 @@ const PlanCard = ({ plan, onEdit, onDelete, onTogglePin, wide }: Props) => {
 
       {/* Progress bar */}
       <div className="mb-2">
-        <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden">
+        <div className="w-full h-1.5 rounded-full overflow-hidden glass-progress-track">
           <div
             className="h-full rounded-full transition-all duration-300"
             style={{
@@ -107,7 +114,7 @@ const PlanCard = ({ plan, onEdit, onDelete, onTogglePin, wide }: Props) => {
             {showMenu && (
               <>
                 <div className="fixed inset-0 z-10" onClick={(e) => { e.stopPropagation(); setShowMenu(false) }} />
-                <div className="absolute right-0 top-7 z-20 bg-[#1A1A2E] border border-white/10 rounded-lg shadow-xl py-1 min-w-[120px]">
+                <div className="absolute right-0 top-7 z-20 rounded-lg shadow-xl py-1 min-w-[120px]" style={{ background: "rgba(15,12,30,0.85)", border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)" }}>
                   <button
                     onClick={(e) => { e.stopPropagation(); setShowMenu(false); onEdit() }}
                     className="flex items-center gap-2 w-full px-3 py-1.5 text-xs text-white/60 hover:bg-white/5 hover:text-white transition-colors"

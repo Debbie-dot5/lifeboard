@@ -1,17 +1,31 @@
 "use client"
 
-import { useState } from "react"
-import { useRouter } from "next/navigation"
+import { useState, useEffect, Suspense } from "react"
+import { useRouter, useSearchParams } from "next/navigation"
 import Link from "next/link"
 import { createClient } from "@/lib/supabase/client"
 import { signInSchema } from "@lifeboard/validations"
 
-const LoginPage = () => {
+const LoginContent = () => {
   const router = useRouter()
+  const searchParams = useSearchParams()
   const [email, setEmail] = useState("")
   const [password, setPassword] = useState("")
   const [error, setError] = useState("")
   const [loading, setLoading] = useState(false)
+  const [confirmed, setConfirmed] = useState(false)
+  const [confirmError, setConfirmError] = useState(false)
+
+  useEffect(() => {
+    if (searchParams.get("confirmed") === "true") {
+      setConfirmed(true)
+      const timer = setTimeout(() => setConfirmed(false), 5000)
+      return () => clearTimeout(timer)
+    }
+    if (searchParams.get("error") === "confirmation_failed") {
+      setConfirmError(true)
+    }
+  }, [searchParams])
 
   const handleLogin = async () => {
     setError("")
@@ -35,7 +49,7 @@ const LoginPage = () => {
       return
     }
 
-    router.push("/tasks")
+    router.push("/dashboard")
   }
 
   return (
@@ -49,11 +63,30 @@ const LoginPage = () => {
       <div className="auth-grid-overlay pointer-events-none absolute inset-0" />
 
       {/* Card */}
-      <div className="relative w-full max-w-[420px] animate-card-entrance rounded-[20px] border border-brand/20 bg-white/5 p-10 shadow-[0_0_40px_rgba(108,71,255,0.08)] backdrop-blur-[16px]">
+      <div className="relative w-full max-w-[420px] mx-4 md:mx-auto animate-card-entrance rounded-[20px] border border-brand/20 bg-white/5 p-7 md:p-10 shadow-[0_0_40px_rgba(108,71,255,0.08)] backdrop-blur-[16px]">
         <div className="mb-8 text-center">
           <h1 className="mb-2 text-[28px] font-bold text-white">Welcome back</h1>
           <p className="text-[15px] text-white/50">Sign in to your Lifeboard</p>
         </div>
+
+        {/* Email confirmed success banner */}
+        {confirmed && (
+          <div className="mb-5 flex items-center gap-2.5 rounded-xl border px-4 py-3 text-sm text-green-300 transition-opacity duration-300"
+            style={{
+              backgroundColor: "rgba(34,197,94,0.1)",
+              borderColor: "rgba(34,197,94,0.2)",
+            }}
+          >
+            ✅ Email confirmed! You can now sign in.
+          </div>
+        )}
+
+        {/* Confirmation failed error banner */}
+        {confirmError && (
+          <div className="mb-5 flex items-center gap-2.5 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
+            ❌ Confirmation failed. Please try signing up again.
+          </div>
+        )}
 
         {error && (
           <div className="mb-5 flex items-center gap-2.5 rounded-xl border border-red-500/30 bg-red-500/10 px-4 py-3 text-sm text-red-300">
@@ -104,6 +137,14 @@ const LoginPage = () => {
         </p>
       </div>
     </div>
+  )
+}
+
+const LoginPage = () => {
+  return (
+    <Suspense>
+      <LoginContent />
+    </Suspense>
   )
 }
 

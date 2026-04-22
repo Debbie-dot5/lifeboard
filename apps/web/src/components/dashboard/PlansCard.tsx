@@ -18,14 +18,35 @@ type Props = {
 
 const PlansCard = ({ activePlans }: Props) => {
   return (
-    <div className="relative bg-[#13131F] rounded-2xl border border-white/[0.06] border-l-[3px] border-l-[#3B82F6] p-6 h-full hover:border-[#3B82F6]/30 hover:shadow-[0_0_30px_rgba(59,130,246,0.1)] hover:scale-[1.01] transition-all duration-200 group">
+    <div
+      className="relative rounded-2xl p-4 md:p-5 lg:p-6 h-full transition-all duration-250 group"
+      style={{
+        background: "linear-gradient(135deg, rgba(59,130,246,0.06) 0%, rgba(255,255,255,0.02) 100%)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        borderLeft: "3px solid rgba(59,130,246,0.4)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.07)",
+      }}
+      onMouseEnter={(e) => {
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.14)"
+        e.currentTarget.style.boxShadow = "0 12px 40px rgba(0,0,0,0.4), inset 0 1px 0 rgba(255,255,255,0.1), 0 0 30px rgba(59,130,246,0.1)"
+        e.currentTarget.style.transform = "translateY(-2px)"
+      }}
+      onMouseLeave={(e) => {
+        e.currentTarget.style.borderColor = "rgba(255,255,255,0.08)"
+        e.currentTarget.style.borderLeft = "3px solid rgba(59,130,246,0.4)"
+        e.currentTarget.style.boxShadow = "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.07)"
+        e.currentTarget.style.transform = "translateY(0)"
+      }}
+    >
       {/* Floating icon */}
       <span className="absolute top-4 right-4 text-lg opacity-60 animate-float-rotate">
         🗺️
       </span>
 
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-4">
+      <div className="flex items-center justify-between pb-3 mb-4" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", background: "linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%)" }}>
         <h3 className="font-semibold text-white">Plans</h3>
         <Link
           href="/planner"
@@ -68,7 +89,7 @@ const PlansCard = ({ activePlans }: Props) => {
                     <span className="text-xs text-yellow-400">📌</span>
                   )}
                 </div>
-                <div className="w-full h-1.5 bg-white/5 rounded-full overflow-hidden mb-1">
+                <div className="w-full h-1.5 rounded-full overflow-hidden mb-1 glass-progress-track">
                   <div
                     className="h-full rounded-full transition-all duration-500"
                     style={{

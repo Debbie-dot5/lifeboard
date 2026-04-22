@@ -88,15 +88,15 @@ const NotificationBell = () => {
 
       {/* Dropdown */}
       {isOpen && (
-        <div className="absolute left-0 top-full mt-2 w-80 bg-[#13131F] rounded-xl border border-white/5 shadow-xl z-50">
+        <div className="absolute left-0 top-full mt-2 w-80 rounded-xl z-50" style={{ background: "rgba(15,12,30,0.85)", border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)", boxShadow: "0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1)" }}>
           {/* Header */}
-          <div className="px-4 py-3 border-b border-white/5">
+          <div className="px-4 py-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)" }}>
             <h3 className="text-sm font-semibold text-white">Upcoming Reminders</h3>
           </div>
 
           {/* Notification permission prompt */}
           {isSupported && permission !== "granted" && (
-            <div className="px-4 py-3 border-b border-white/5 bg-[#6C47FF]/5">
+            <div className="px-4 py-3" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", background: "rgba(108,71,255,0.05)" }}>
               <div className="flex items-center gap-2 mb-1.5">
                 <BellRing size={14} className="text-[#6C47FF]" />
                 <span className="text-xs text-white/60">Get browser notifications</span>
@@ -147,7 +147,7 @@ const NotificationBell = () => {
           </div>
 
           {/* Footer */}
-          <div className="px-4 py-2.5 border-t border-white/5">
+          <div className="px-4 py-2.5" style={{ borderTop: "1px solid rgba(255,255,255,0.06)" }}>
             <Link
               href="/reminders"
               onClick={() => setIsOpen(false)}

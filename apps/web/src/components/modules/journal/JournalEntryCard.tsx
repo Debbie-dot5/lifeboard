@@ -39,7 +39,14 @@ const JournalEntryCard = ({
   return (
     <div
       onClick={() => router.push(`/journal/${entry.id}`)}
-      className="bg-[#13131F] rounded-xl border border-white/5 p-5 hover:border-[#6C47FF]/30 hover:shadow-[0_0_20px_rgba(108,71,255,0.08)] transition-all cursor-pointer group relative"
+      className="rounded-xl p-5 transition-all cursor-pointer group relative"
+      style={{
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
+      }}
     >
       <div className="flex items-start justify-between mb-3">
         <div className="flex items-center gap-2">
@@ -57,7 +64,7 @@ const JournalEntryCard = ({
             <MoreVertical size={16} />
           </button>
           {menuOpen && (
-            <div className="absolute right-0 top-8 bg-[#1A1A2E] border border-white/10 rounded-lg shadow-xl py-1 z-10 min-w-[100px]">
+            <div className="absolute right-0 top-8 rounded-lg shadow-xl py-1 z-10 min-w-[100px]" style={{ background: "rgba(15,12,30,0.85)", border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)" }}>
               <button
                 onClick={(e) => {
                   e.stopPropagation()

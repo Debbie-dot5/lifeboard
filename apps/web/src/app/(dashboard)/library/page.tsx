@@ -1,6 +1,6 @@
 "use client"
 
-import { useState, useMemo } from "react"
+import { useState, useMemo, useCallback, useEffect } from "react"
 import { useRouter } from "next/navigation"
 import { Plus, Search, BookOpen, Loader2 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
@@ -10,6 +10,7 @@ import UploadBookModal from "@/components/modules/library/UploadBookModal"
 import ReadingGoalModal from "@/components/modules/library/ReadingGoalModal"
 import ReadingGoalBanner from "@/components/modules/library/ReadingGoalBanner"
 import LibraryStats from "@/components/modules/library/LibraryStats"
+import { useToastContext } from "@/components/ui/ToastProvider"
 import type { BookWithProgress } from "@lifeboard/lib"
 import { useQuery } from "@tanstack/react-query"
 import { getRelativeDate } from "@lifeboard/lib"
@@ -25,8 +26,6 @@ const FILTERS: { label: string; value: Filter }[] = [
   { label: "Not Started", value: "not_started" },
 ]
 
-const BOOKS_PER_SHELF = 5
-
 const LibraryPage = () => {
   const router = useRouter()
   const supabase = createClient()
@@ -35,6 +34,14 @@ const LibraryPage = () => {
   const [showGoal, setShowGoal] = useState(false)
   const [search, setSearch] = useState("")
   const [filter, setFilter] = useState<Filter>("all")
+  const [booksPerShelf, setBooksPerShelf] = useState(5)
+
+  useEffect(() => {
+    const update = () => setBooksPerShelf(window.innerWidth < 768 ? 3 : 5)
+    update()
+    window.addEventListener("resize", update)
+    return () => window.removeEventListener("resize", update)
+  }, [])
 
   // Get user
   useQuery({
@@ -63,6 +70,16 @@ const LibraryPage = () => {
     isUploading,
     isCreatingGoal,
   } = useLibrary(userId)
+
+  const { showToast } = useToastContext()
+
+  const handleDeleteBook = useCallback(
+    (book: BookWithProgress) => {
+      deleteBook({ id: book.id, file_url: book.file_url, cover_url: book.cover_url })
+      showToast("Book deleted", "success")
+    },
+    [deleteBook, showToast]
+  )
 
   // Filter + search
   const filteredBooks = useMemo(() => {
@@ -110,11 +127,11 @@ const LibraryPage = () => {
   // Group into shelf rows
   const shelves = useMemo(() => {
     const rows: BookWithProgress[][] = []
-    for (let i = 0; i < filteredBooks.length; i += BOOKS_PER_SHELF) {
-      rows.push(filteredBooks.slice(i, i + BOOKS_PER_SHELF))
+    for (let i = 0; i < filteredBooks.length; i += booksPerShelf) {
+      rows.push(filteredBooks.slice(i, i + booksPerShelf))
     }
     return rows
-  }, [filteredBooks])
+  }, [filteredBooks, booksPerShelf])
 
   const openBook = (bookId: string) => {
     router.push(`/library/${bookId}`)
@@ -129,23 +146,39 @@ const LibraryPage = () => {
   }
 
   return (
-    <div className="p-6 md:p-8 max-w-6xl mx-auto">
+    <div className="p-4 md:p-6 lg:p-8 pt-20 md:pt-6 lg:pt-8 max-w-6xl mx-auto">
       {/* Header */}
       <div className="flex items-center justify-between mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-white">Library</h1>
+          <h1
+            className="text-2xl font-bold text-white"
+            style={{ fontFamily: "var(--font-clash)", letterSpacing: "-0.03em" }}
+          >
+            Library
+          </h1>
           <p className="text-sm text-white/40 mt-0.5">
             {books.length} book{books.length !== 1 ? "s" : ""} in your collection
           </p>
         </div>
         <button
           onClick={() => setShowUpload(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#6C47FF] text-white text-sm font-medium rounded-lg hover:bg-[#5835FF] transition-colors"
+          className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-medium rounded-lg transition-all"
+          style={{ background: "linear-gradient(135deg, rgba(108,71,255,0.9), rgba(79,47,224,0.9))", border: "1px solid rgba(108,71,255,0.5)", boxShadow: "0 4px 20px rgba(108,71,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2)" }}
         >
           <Plus size={16} />
           Upload Book
         </button>
       </div>
+
+      {/* Mobile FAB */}
+      <button
+        onClick={() => setShowUpload(true)}
+        className="md:hidden fixed bottom-4 right-4 z-40 w-14 h-14 rounded-full flex items-center justify-center safe-bottom"
+        style={{ background: "linear-gradient(135deg, rgba(108,71,255,0.95), rgba(79,47,224,0.95))", border: "1px solid rgba(108,71,255,0.5)", boxShadow: "0 8px 24px rgba(108,71,255,0.4), inset 0 1px 0 rgba(255,255,255,0.2)" }}
+        aria-label="Upload Book"
+      >
+        <Plus size={24} className="text-white" />
+      </button>
 
       {/* Reading Goal Banner */}
       <div className="mb-4">
@@ -194,10 +227,10 @@ const LibraryPage = () => {
               <h2 className="text-sm font-medium text-white/50 uppercase tracking-wider mb-4">
                 Continue Reading
               </h2>
-              <div className="flex gap-6 overflow-x-auto pb-4 -mx-2 px-2 scrollbar-thin">
+              <div className="flex gap-4 md:gap-6 overflow-x-auto flex-nowrap pb-4 -mx-2 px-2 scrollbar-thin">
                 {currentlyReading.map((book) => (
                   <div key={book.id} className="flex-shrink-0">
-                    <BookSpine book={book} onClick={() => openBook(book.id)} size="lg" />
+                    <BookSpine book={book} onClick={() => openBook(book.id)} onDelete={handleDeleteBook} size="lg" />
                     <p className="text-[10px] text-white/30 mt-2 text-center max-w-[160px] truncate">
                       {book.progress
                         ? getRelativeDate(book.progress.last_read_at)
@@ -225,7 +258,7 @@ const LibraryPage = () => {
                 value={search}
                 onChange={(e) => setSearch(e.target.value)}
                 placeholder="Search by title or author..."
-                className="w-full bg-white/5 border border-white/10 rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-white/20 focus:border-[#6C47FF] focus:outline-none transition-colors"
+                className="w-full rounded-lg pl-9 pr-3 py-2 text-sm text-white placeholder-white/20 glass-input"
               />
             </div>
 
@@ -237,9 +270,14 @@ const LibraryPage = () => {
                   onClick={() => setFilter(f.value)}
                   className={`px-3 py-1 rounded-full text-xs font-medium transition-all ${
                     filter === f.value
-                      ? "bg-[#6C47FF] text-white"
-                      : "bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/60"
+                      ? "text-white"
+                      : "text-white/40 hover:text-white/60"
                   }`}
+                  style={
+                    filter === f.value
+                      ? { background: "rgba(108,71,255,0.2)", border: "1px solid rgba(108,71,255,0.3)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)" }
+                      : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+                  }
                 >
                   {f.label}
                 </button>
@@ -257,19 +295,20 @@ const LibraryPage = () => {
               {shelves.map((shelf, shelfIndex) => (
                 <div key={shelfIndex}>
                   {/* Books on shelf */}
-                  <div className="flex items-end gap-4 px-4 pb-1 min-h-[200px]">
+                  <div className="flex items-end gap-2 md:gap-4 px-2 md:px-4 pb-1 min-h-[200px]">
                     {shelf.map((book) => (
                       <BookSpine
                         key={book.id}
                         book={book}
                         onClick={() => openBook(book.id)}
+                        onDelete={handleDeleteBook}
                       />
                     ))}
                     {/* Add Book slot — only on last shelf */}
                     {shelfIndex === shelves.length - 1 && (
                       <div
                         onClick={() => setShowUpload(true)}
-                        className="flex-shrink-0 w-[130px] h-[185px] border-2 border-dashed border-white/10 rounded-sm flex flex-col items-center justify-center cursor-pointer hover:border-white/20 hover:bg-white/5 transition-colors"
+                        className="flex-shrink-0 w-[90px] h-[130px] md:w-[130px] md:h-[185px] border-2 border-dashed border-white/10 rounded-sm flex flex-col items-center justify-center cursor-pointer hover:border-white/20 hover:bg-white/5 transition-colors"
                         style={{
                           transform: "perspective(800px) rotateY(-15deg)",
                           transformOrigin: "left center",
@@ -296,10 +335,10 @@ const LibraryPage = () => {
               {/* Empty shelf if no books match but has filter */}
               {shelves.length === 0 && (
                 <div>
-                  <div className="flex items-end gap-4 px-4 pb-1 min-h-[200px] justify-center">
+                  <div className="flex items-end gap-2 md:gap-4 px-2 md:px-4 pb-1 min-h-[200px] justify-center">
                     <div
                       onClick={() => setShowUpload(true)}
-                      className="flex-shrink-0 w-[130px] h-[185px] border-2 border-dashed border-white/10 rounded-sm flex flex-col items-center justify-center cursor-pointer hover:border-white/20 hover:bg-white/5 transition-colors"
+                      className="flex-shrink-0 w-[90px] h-[130px] md:w-[130px] md:h-[185px] border-2 border-dashed border-white/10 rounded-sm flex flex-col items-center justify-center cursor-pointer hover:border-white/20 hover:bg-white/5 transition-colors"
                       style={{
                         transform: "perspective(800px) rotateY(-15deg)",
                         transformOrigin: "left center",
@@ -334,10 +373,10 @@ const LibraryPage = () => {
                   <path strokeLinecap="round" strokeLinejoin="round" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" />
                 </svg>
               </div>
-              <div className="flex gap-6 overflow-x-auto pb-4 -mx-2 px-2 scrollbar-thin">
+              <div className="flex gap-4 md:gap-6 overflow-x-auto flex-nowrap pb-4 -mx-2 px-2 scrollbar-thin">
                 {booksFinishedThisYear.map((book) => (
                   <div key={book.id} className="flex-shrink-0">
-                    <BookSpine book={book} onClick={() => openBook(book.id)} size="sm" />
+                    <BookSpine book={book} onClick={() => openBook(book.id)} onDelete={handleDeleteBook} size="sm" />
                   </div>
                 ))}
               </div>

@@ -57,7 +57,7 @@ const SignupPage = () => {
       <div className="auth-grid-overlay pointer-events-none absolute inset-0" />
 
       {/* Card */}
-      <div className="relative w-full max-w-[420px] animate-card-entrance rounded-[20px] border border-brand/20 bg-white/5 p-10 shadow-[0_0_40px_rgba(108,71,255,0.08)] backdrop-blur-[16px]">
+      <div className="relative w-full max-w-[420px] mx-4 md:mx-auto animate-card-entrance rounded-[20px] border border-brand/20 bg-white/5 p-7 md:p-10 shadow-[0_0_40px_rgba(108,71,255,0.08)] backdrop-blur-[16px]">
         {confirmationSent ? (
           <div className="py-5 text-center">
             <div className="mb-4 text-5xl">✉</div>

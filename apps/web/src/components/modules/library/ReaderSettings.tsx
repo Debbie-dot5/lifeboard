@@ -31,7 +31,7 @@ const ReaderSettings = ({
 }: Props) => {
   return (
     <div
-      className="fixed top-0 right-0 bottom-0 z-40 w-72 transition-transform duration-300 ease-out"
+      className="fixed top-0 right-0 bottom-0 z-40 w-full md:w-72 transition-transform duration-300 ease-out"
       style={{
         transform: isOpen ? "translateX(0)" : "translateX(100%)",
       }}

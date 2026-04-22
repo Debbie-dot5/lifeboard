@@ -4,6 +4,7 @@ import { useEffect, useRef, useState, useCallback } from "react"
 import { ChevronLeft, ChevronRight, Loader2 } from "lucide-react"
 import { createClient } from "@/lib/supabase/client"
 
+
 type Props = {
   fileUrl: string
   currentPage: number
@@ -219,7 +220,7 @@ const EpubReader = ({ fileUrl, currentPage, onPageChange, onTotalPagesDetected, 
 
       {/* Navigation */}
       <div
-        className="flex items-center justify-center gap-4 py-3 px-4 border-t w-full"
+        className="flex items-center justify-center gap-4 py-3 px-4 border-t w-full safe-bottom"
         style={{
           backgroundColor: config.navBg,
           borderColor: config.navBorder,
@@ -227,7 +228,7 @@ const EpubReader = ({ fileUrl, currentPage, onPageChange, onTotalPagesDetected, 
       >
         <button
           onClick={goPrev}
-          className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+          className="w-14 h-14 md:w-10 md:h-10 rounded-lg hover:bg-white/10 transition-colors flex items-center justify-center"
         >
           <ChevronLeft size={18} style={{ color: config.textColor }} />
         </button>
@@ -240,7 +241,7 @@ const EpubReader = ({ fileUrl, currentPage, onPageChange, onTotalPagesDetected, 
 
         <button
           onClick={goNext}
-          className="p-1.5 rounded-lg hover:bg-white/10 transition-colors"
+          className="w-14 h-14 md:w-10 md:h-10 rounded-lg hover:bg-white/10 transition-colors flex items-center justify-center"
         >
           <ChevronRight size={18} style={{ color: config.textColor }} />
         </button>

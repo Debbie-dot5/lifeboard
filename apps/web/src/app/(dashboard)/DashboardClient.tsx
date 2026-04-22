@@ -116,7 +116,7 @@ const DashboardClient = () => {
   }
 
   return (
-    <div className="relative p-8 overflow-hidden">
+    <div className="relative p-4 md:p-6 lg:p-8 pt-20 md:pt-6 lg:pt-8 overflow-hidden">
       {/* Ambient orbs */}
       <div className="pointer-events-none absolute -left-[100px] -top-[100px] h-[350px] w-[350px] rounded-full bg-brand opacity-[0.12] blur-[80px] animate-orb-drift-1" />
       <div className="pointer-events-none absolute -bottom-[60px] -right-[80px] h-[280px] w-[280px] rounded-full bg-violet-500 opacity-[0.10] blur-[80px] animate-orb-drift-2" />
@@ -125,9 +125,20 @@ const DashboardClient = () => {
       {/* Grid overlay */}
       <div className="auth-grid-overlay pointer-events-none absolute inset-0 opacity-50" />
 
-      {/* Header */}
-      <div className="relative mb-8">
-        <h1 className="text-3xl font-bold text-white mb-1">
+      {/* Header — glass panel */}
+      <div
+        className="relative mb-6 md:mb-8 rounded-2xl p-4 md:p-5 lg:p-6"
+        style={{
+          background: "linear-gradient(180deg, rgba(108,71,255,0.04) 0%, transparent 100%)",
+          borderBottom: "1px solid rgba(255,255,255,0.06)",
+          backdropFilter: "blur(20px)",
+          WebkitBackdropFilter: "blur(20px)",
+        }}
+      >
+        <h1
+          className="text-2xl md:text-2xl lg:text-3xl font-bold text-white mb-1"
+          style={{ fontFamily: "var(--font-clash)", letterSpacing: "-0.03em" }}
+        >
           {getGreeting()}, {displayName}
         </h1>
         <p
@@ -140,18 +151,18 @@ const DashboardClient = () => {
           {formattedDate} &middot; {formattedTime}
         </p>
 
-        {/* Quick stat pills */}
-        <div className="flex flex-wrap gap-3 mt-4">
-          <span className="bg-white/5 rounded-full px-4 py-1.5 text-sm text-white/60">
+        {/* Quick stat pills — glass */}
+        <div className="grid grid-cols-2 md:flex md:flex-wrap gap-2 md:gap-3 mt-4">
+          <span className="font-mono rounded-full px-4 py-1.5 text-sm text-white/60" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(10px)" }}>
             {todaysTasks.filter((t) => !t.is_complete).length} tasks today
           </span>
-          <span className="bg-white/5 rounded-full px-4 py-1.5 text-sm text-white/60">
+          <span className="font-mono rounded-full px-4 py-1.5 text-sm text-white/60" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(10px)" }}>
             {longestHabitStreak} day streak
           </span>
-          <span className="bg-white/5 rounded-full px-4 py-1.5 text-sm text-white/60">
+          <span className="font-mono rounded-full px-4 py-1.5 text-sm text-white/60" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(10px)" }}>
             {booksReadThisYear} books read
           </span>
-          <span className="bg-white/5 rounded-full px-4 py-1.5 text-sm text-white/60">
+          <span className="font-mono rounded-full px-4 py-1.5 text-sm text-white/60" style={{ background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(10px)" }}>
             {weekCompletion}% week complete
           </span>
         </div>
@@ -160,7 +171,7 @@ const DashboardClient = () => {
       {/* Bento Grid */}
       <div className="relative grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-4">
         <div
-          className="lg:col-span-2 animate-fade-in-up"
+          className="order-1 lg:order-none lg:col-span-2 animate-fade-in-up"
           style={{ animationDelay: "0.1s" }}
         >
           <TasksCard
@@ -173,7 +184,7 @@ const DashboardClient = () => {
         </div>
 
         <div
-          className="animate-fade-in-up"
+          className="order-2 lg:order-none animate-fade-in-up"
           style={{ animationDelay: "0.2s" }}
         >
           <HabitsCard
@@ -187,21 +198,21 @@ const DashboardClient = () => {
         </div>
 
         <div
-          className="animate-fade-in-up"
+          className="order-3 lg:order-none animate-fade-in-up"
           style={{ animationDelay: "0.3s" }}
         >
           <RemindersCard reminders={upcomingReminders.slice(0, 3)} />
         </div>
 
         <div
-          className="lg:col-span-2 animate-fade-in-up"
+          className="order-5 lg:order-none lg:col-span-2 animate-fade-in-up"
           style={{ animationDelay: "0.4s" }}
         >
           <PlansCard activePlans={activePlans} />
         </div>
 
         <div
-          className="animate-fade-in-up"
+          className="order-4 lg:order-none animate-fade-in-up"
           style={{ animationDelay: "0.5s" }}
         >
           <ReadingCard
@@ -213,7 +224,7 @@ const DashboardClient = () => {
         </div>
 
         <div
-          className="animate-fade-in-up"
+          className="order-6 lg:order-none animate-fade-in-up"
           style={{ animationDelay: "0.6s" }}
         >
           <JournalCard
@@ -223,7 +234,7 @@ const DashboardClient = () => {
         </div>
 
         <div
-          className="lg:col-span-4 md:col-span-2 animate-fade-in-up"
+          className="order-7 lg:order-none lg:col-span-4 md:col-span-2 animate-fade-in-up"
           style={{ animationDelay: "0.7s" }}
         >
           <WeeklyStatsCard

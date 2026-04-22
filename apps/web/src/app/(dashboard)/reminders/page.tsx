@@ -117,9 +117,16 @@ const ReminderCard = ({
 
   return (
     <div
-      className={`relative bg-[#13131F] rounded-xl border border-white/5 border-l-4 ${config.borderColor} p-5 hover:border-[#6C47FF]/30 hover:shadow-[0_0_20px_rgba(108,71,255,0.08)] transition-all group ${
+      className={`relative rounded-xl border-l-4 ${config.borderColor} p-5 transition-all group ${
         !reminder.is_active ? "opacity-50" : ""
       }`}
+      style={{
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
+      }}
     >
       {/* Header */}
       <div className="flex items-start justify-between mb-3">
@@ -137,7 +144,7 @@ const ReminderCard = ({
             <MoreVertical size={16} />
           </button>
           {menuOpen && (
-            <div className="absolute right-0 top-8 bg-[#1A1A2E] border border-white/10 rounded-lg shadow-xl py-1 z-10 min-w-[120px]">
+            <div className="absolute right-0 top-8 rounded-lg shadow-xl py-1 z-10 min-w-[120px]" style={{ background: "rgba(15,12,30,0.85)", border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)" }}>
               <button
                 onClick={() => {
                   onEdit(reminder)
@@ -241,18 +248,24 @@ const RemindersPage = () => {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-6 lg:p-8 pt-20 md:pt-6 lg:pt-8">
       {/* Header */}
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex items-start justify-between mb-6 md:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white mb-1">Reminders</h1>
+          <h1
+            className="text-2xl font-bold text-white mb-1"
+            style={{ fontFamily: "var(--font-clash)", letterSpacing: "-0.03em" }}
+          >
+            Reminders
+          </h1>
           <p className="text-white/40 text-sm">
             {activeReminders.length} active reminder{activeReminders.length !== 1 ? "s" : ""}
           </p>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#6C47FF] text-white text-sm font-medium rounded-lg hover:bg-[#5835FF] transition-colors"
+          className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-medium rounded-lg transition-all"
+          style={{ background: "linear-gradient(135deg, rgba(108,71,255,0.9), rgba(79,47,224,0.9))", border: "1px solid rgba(108,71,255,0.5)", boxShadow: "0 4px 20px rgba(108,71,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2)" }}
         >
           <Plus size={16} />
           Add Reminder
@@ -260,16 +273,21 @@ const RemindersPage = () => {
       </div>
 
       {/* Filter pills */}
-      <div className="flex gap-2 mb-6">
+      <div className="flex gap-2 mb-6 overflow-x-auto flex-nowrap pb-1">
         {FILTER_OPTIONS.map((opt) => (
           <button
             key={opt.value}
             onClick={() => setActiveFilter(opt.value)}
-            className={`px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
+            className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               activeFilter === opt.value
-                ? "bg-[#6C47FF] text-white"
-                : "bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/60"
+                ? "text-white"
+                : "text-white/40 hover:text-white/60"
             }`}
+            style={
+              activeFilter === opt.value
+                ? { background: "rgba(108,71,255,0.2)", border: "1px solid rgba(108,71,255,0.3)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)" }
+                : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+            }
           >
             {opt.label}
           </button>
@@ -304,6 +322,22 @@ const RemindersPage = () => {
           ))}
         </div>
       )}
+
+      {/* Mobile floating add button */}
+      <button
+        onClick={() => setShowModal(true)}
+        aria-label="Add reminder"
+        className="md:hidden fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full text-white flex items-center justify-center transition-all duration-200 hover:scale-105 safe-bottom"
+        style={{
+          background: "linear-gradient(135deg, rgba(108,71,255,0.9), rgba(79,47,224,0.9))",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          border: "1px solid rgba(108,71,255,0.5)",
+          boxShadow: "0 4px 20px rgba(108,71,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.2)",
+        }}
+      >
+        <Plus size={22} />
+      </button>
 
       {/* Modal */}
       <AddReminderModal

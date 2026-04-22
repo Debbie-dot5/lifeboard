@@ -77,16 +77,21 @@ const PlannerPage = () => {
   }
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-6 lg:p-8 pt-20 md:pt-6 lg:pt-8">
       {/* Header */}
-      <div className="flex items-start justify-between mb-6">
+      <div className="flex flex-col md:flex-row items-start md:justify-between gap-3 md:gap-0 mb-6">
         <div>
-          <h1 className="text-2xl font-bold text-white mb-1">Planner</h1>
+          <h1
+            className="text-2xl font-bold text-white mb-1"
+            style={{ fontFamily: "var(--font-clash)", letterSpacing: "-0.03em" }}
+          >
+            Planner
+          </h1>
           <p className="text-white/40 text-sm">
             {plans.length} {plans.length === 1 ? "plan" : "plans"}
           </p>
         </div>
-        <div className="flex items-center gap-3">
+        <div className="flex items-center gap-3 w-full md:w-auto">
           {/* View toggle */}
           <div className="flex bg-white/5 rounded-lg p-0.5">
             <button
@@ -108,7 +113,8 @@ const PlannerPage = () => {
           </div>
           <button
             onClick={() => router.push("/planner/new")}
-            className="flex items-center gap-2 px-4 py-2 bg-[#6C47FF] text-white text-sm font-medium rounded-lg hover:bg-[#5835FF] transition-colors"
+            className="flex items-center justify-center gap-2 px-4 py-2 flex-1 md:flex-none text-white text-sm font-medium rounded-lg transition-all min-h-11"
+            style={{ background: "linear-gradient(135deg, rgba(108,71,255,0.9), rgba(79,47,224,0.9))", border: "1px solid rgba(108,71,255,0.5)", boxShadow: "0 4px 20px rgba(108,71,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2)" }}
           >
             <Plus size={16} />
             New Plan
@@ -124,9 +130,14 @@ const PlannerPage = () => {
             onClick={() => setTemplateFilter(opt.value)}
             className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               templateFilter === opt.value
-                ? "bg-[#6C47FF] text-white"
-                : "bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/60"
+                ? "text-white"
+                : "text-white/40 hover:text-white/60"
             }`}
+            style={
+              templateFilter === opt.value
+                ? { background: "rgba(108,71,255,0.2)", border: "1px solid rgba(108,71,255,0.3)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)" }
+                : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+            }
           >
             {opt.label}
           </button>

@@ -1,0 +1,121 @@
+/* ═══════════════════════════════════════════════════════════════════
+   Liquid Glass Design System — Lifeboard
+   ═══════════════════════════════════════════════════════════════════ */
+
+:root {
+  /* Base glass */
+  --glass-bg: rgba(255, 255, 255, 0.04);
+  --glass-border: rgba(255, 255, 255, 0.1);
+  --glass-highlight: rgba(255, 255, 255, 0.08);
+  --glass-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  --glass-blur: blur(20px);
+
+  /* Purple tinted glass (brand) */
+  --glass-purple-bg: rgba(108, 71, 255, 0.08);
+  --glass-purple-border: rgba(108, 71, 255, 0.2);
+  --glass-purple-highlight: rgba(108, 71, 255, 0.15);
+
+  /* Strong glass (modals, sidebar) */
+  --glass-strong-bg: rgba(255, 255, 255, 0.06);
+  --glass-strong-border: rgba(255, 255, 255, 0.12);
+  --glass-strong-blur: blur(40px);
+
+  /* Input glass */
+  --glass-input-bg: rgba(255, 255, 255, 0.05);
+  --glass-input-border: rgba(255, 255, 255, 0.1);
+  --glass-input-focus-border: rgba(108, 71, 255, 0.5);
+  --glass-input-focus-shadow: 0 0 0 3px rgba(108, 71, 255, 0.12),
+                               inset 0 1px 0 rgba(255,255,255,0.05);
+}
+
+/* ─── Base glass card ─────────────────────────────────────────────── */
+.glass {
+  background: var(--glass-bg);
+  border: 1px solid var(--glass-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow),
+              inset 0 1px 0 var(--glass-highlight);
+  position: relative;
+}
+
+/* ─── Glass with purple tint ──────────────────────────────────────── */
+.glass-purple {
+  background: var(--glass-purple-bg);
+  border: 1px solid var(--glass-purple-border);
+  backdrop-filter: var(--glass-blur);
+  -webkit-backdrop-filter: var(--glass-blur);
+  box-shadow: var(--glass-shadow),
+              inset 0 1px 0 var(--glass-purple-highlight),
+              0 0 40px rgba(108, 71, 255, 0.08);
+}
+
+/* ─── Strong glass for modals / sidebar ───────────────────────────── */
+.glass-strong {
+  background: var(--glass-strong-bg);
+  border: 1px solid var(--glass-strong-border);
+  backdrop-filter: var(--glass-strong-blur);
+  -webkit-backdrop-filter: var(--glass-strong-blur);
+  box-shadow: 0 16px 48px rgba(0, 0, 0, 0.5),
+              inset 0 1px 0 rgba(255, 255, 255, 0.1),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.2);
+}
+
+/* ─── Glass input ─────────────────────────────────────────────────── */
+.glass-input {
+  background: var(--glass-input-bg);
+  border: 1px solid var(--glass-input-border);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.05),
+              inset 0 -1px 0 rgba(0, 0, 0, 0.1);
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.glass-input:focus {
+  border-color: var(--glass-input-focus-border);
+  box-shadow: var(--glass-input-focus-shadow);
+  outline: none;
+}
+
+/* ─── Glass button ────────────────────────────────────────────────── */
+.glass-btn {
+  background: rgba(108, 71, 255, 0.15);
+  border: 1px solid rgba(108, 71, 255, 0.3);
+  backdrop-filter: blur(10px);
+  -webkit-backdrop-filter: blur(10px);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.1),
+              0 4px 16px rgba(108, 71, 255, 0.2);
+  transition: all 0.2s ease;
+}
+
+.glass-btn:hover {
+  background: rgba(108, 71, 255, 0.25);
+  border-color: rgba(108, 71, 255, 0.5);
+  box-shadow: inset 0 1px 0 rgba(255, 255, 255, 0.15),
+              0 4px 24px rgba(108, 71, 255, 0.35);
+  transform: translateY(-1px);
+}
+
+/* ─── Glass modal overlay ─────────────────────────────────────────── */
+.glass-overlay {
+  background: rgba(5, 5, 16, 0.7);
+  backdrop-filter: blur(8px);
+  -webkit-backdrop-filter: blur(8px);
+}
+
+/* ─── Light refraction edge — applied via ::before ────────────────── */
+.glass::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  border-radius: inherit;
+  background: linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.06) 0%,
+    transparent 50%,
+    rgba(0, 0, 0, 0.1) 100%
+  );
+  pointer-events: none;
+  z-index: 0;
+}

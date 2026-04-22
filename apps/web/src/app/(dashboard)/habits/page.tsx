@@ -68,10 +68,17 @@ const HabitCard = ({
 
   return (
     <div
-      className={`relative bg-[#13131F] rounded-xl border border-l-[3px] overflow-hidden hover:border-[#6C47FF]/30 hover:shadow-[0_0_20px_rgba(108,71,255,0.08)] transition-all group ${
-        habit.is_archived ? "opacity-50 border-gray-500/30" : "border-white/5"
+      className={`relative rounded-xl border-l-[3px] overflow-hidden transition-all group ${
+        habit.is_archived ? "opacity-50" : ""
       }`}
-      style={{ borderLeftColor: habit.is_archived ? "#6B7280" : config.color }}
+      style={{
+        borderLeftColor: habit.is_archived ? "#6B7280" : config.color,
+        background: "rgba(255,255,255,0.03)",
+        border: "1px solid rgba(255,255,255,0.08)",
+        backdropFilter: "blur(20px)",
+        WebkitBackdropFilter: "blur(20px)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)",
+      }}
     >
       {/* Clickable body */}
       <div className="p-5 pb-3 cursor-pointer" onClick={onClick}>
@@ -106,7 +113,7 @@ const HabitCard = ({
               <MoreVertical size={16} />
             </button>
             {menuOpen && (
-              <div className="absolute right-0 top-8 bg-[#1A1A2E] border border-white/10 rounded-lg shadow-xl py-1 z-10 min-w-[120px]">
+              <div className="absolute right-0 top-8 rounded-lg shadow-xl py-1 z-10 min-w-[120px]" style={{ background: "rgba(15,12,30,0.85)", border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)" }}>
                 <button
                   onClick={(e) => {
                     e.stopPropagation()
@@ -151,7 +158,7 @@ const HabitCard = ({
         {/* Streak */}
         <div className="flex items-baseline gap-1.5 mb-2">
           <span
-            className={`text-3xl font-bold ${
+            className={`font-mono text-3xl font-bold ${
               habit.current_streak > 0 ? "text-[#6C47FF]" : "text-white/20"
             }`}
           >
@@ -168,7 +175,7 @@ const HabitCard = ({
         )}
 
         {/* Mini heatmap */}
-        <div className="mb-1">
+        <div className="mb-1 overflow-x-auto -mx-2 px-2 md:overflow-visible md:mx-0 md:px-0">
           <HabitHeatmap logs={habit.all_log_dates} mini />
         </div>
       </div>
@@ -243,16 +250,22 @@ const HabitsPage = () => {
   })
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-6 lg:p-8 pt-20 md:pt-6 lg:pt-8">
       {/* Header */}
-      <div className="flex items-start justify-between mb-8">
+      <div className="flex items-start justify-between mb-6 md:mb-8">
         <div>
-          <h1 className="text-2xl font-bold text-white mb-1">Habits</h1>
+          <h1
+            className="text-2xl font-bold text-white mb-1"
+            style={{ fontFamily: "var(--font-clash)", letterSpacing: "-0.03em" }}
+          >
+            Habits
+          </h1>
           <p className="text-white/40 text-sm">{todayFormatted}</p>
         </div>
         <button
           onClick={() => setShowModal(true)}
-          className="flex items-center gap-2 px-4 py-2 bg-[#6C47FF] text-white text-sm font-medium rounded-lg hover:bg-[#5835FF] transition-colors"
+          className="hidden md:inline-flex items-center gap-2 px-4 py-2 text-white text-sm font-medium rounded-lg transition-all"
+          style={{ background: "linear-gradient(135deg, rgba(108,71,255,0.9), rgba(79,47,224,0.9))", border: "1px solid rgba(108,71,255,0.5)", boxShadow: "0 4px 20px rgba(108,71,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2)" }}
         >
           <Plus size={16} />
           Add Habit
@@ -261,20 +274,20 @@ const HabitsPage = () => {
 
       {/* Quick check-in banner */}
       {activeHabits.length > 0 && (
-        <div className="bg-[#13131F] rounded-xl p-4 mb-6 border border-white/5">
+        <div className="rounded-xl p-4 mb-6" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.08)", backdropFilter: "blur(20px)", WebkitBackdropFilter: "blur(20px)", boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.06)" }}>
           <div className="flex items-center justify-between mb-3">
             <p className="text-xs text-white/40 font-medium">
               Quick Check-in — {todayProgress.completed}/{todayProgress.total} done
             </p>
           </div>
-          <div className="flex gap-2 overflow-x-auto pb-1">
+          <div className="flex flex-col md:flex-row gap-2 md:overflow-x-auto md:pb-1">
             {activeHabits.map((habit) => (
               <button
                 key={habit.id}
                 onClick={() =>
                   habit.completed_today ? unlogHabit(habit.id) : logHabit(habit.id)
                 }
-                className={`flex-shrink-0 flex items-center gap-2 px-3 py-1.5 rounded-full text-xs font-medium transition-all ${
+                className={`w-full md:w-auto md:flex-shrink-0 flex items-center gap-2 px-3 py-2 md:py-1.5 rounded-full text-xs font-medium transition-all min-h-[44px] md:min-h-0 ${
                   habit.completed_today
                     ? "bg-[#6C47FF]/10 border border-[#6C47FF]/30 text-[#6C47FF]"
                     : "bg-white/5 border border-white/10 text-white/50 hover:bg-white/10"
@@ -291,16 +304,21 @@ const HabitsPage = () => {
       )}
 
       {/* Category filter pills */}
-      <div className="flex gap-2 mb-4 overflow-x-auto">
+      <div className="flex gap-2 mb-4 overflow-x-auto flex-nowrap pb-1">
         {CATEGORY_FILTER_OPTIONS.map((opt) => (
           <button
             key={opt.value}
             onClick={() => setActiveCategory(opt.value)}
             className={`flex-shrink-0 px-3 py-1.5 rounded-lg text-xs font-medium transition-all ${
               activeCategory === opt.value
-                ? "bg-[#6C47FF] text-white"
-                : "bg-white/5 text-white/40 hover:bg-white/10 hover:text-white/60"
+                ? "text-white"
+                : "text-white/40 hover:text-white/60"
             }`}
+            style={
+              activeCategory === opt.value
+                ? { background: "rgba(108,71,255,0.2)", border: "1px solid rgba(108,71,255,0.3)", boxShadow: "inset 0 1px 0 rgba(255,255,255,0.1)" }
+                : { background: "rgba(255,255,255,0.04)", border: "1px solid rgba(255,255,255,0.08)" }
+            }
           >
             {opt.label}
           </button>
@@ -353,6 +371,22 @@ const HabitsPage = () => {
           ))}
         </div>
       )}
+
+      {/* Mobile floating add button */}
+      <button
+        onClick={() => setShowModal(true)}
+        aria-label="Add habit"
+        className="md:hidden fixed bottom-6 right-6 z-40 w-14 h-14 rounded-full text-white flex items-center justify-center transition-all duration-200 hover:scale-105 safe-bottom"
+        style={{
+          background: "linear-gradient(135deg, rgba(108,71,255,0.9), rgba(79,47,224,0.9))",
+          backdropFilter: "blur(10px)",
+          WebkitBackdropFilter: "blur(10px)",
+          border: "1px solid rgba(108,71,255,0.5)",
+          boxShadow: "0 4px 20px rgba(108,71,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2), inset 0 -1px 0 rgba(0,0,0,0.2)",
+        }}
+      >
+        <Plus size={22} />
+      </button>
 
       {/* Modal */}
       <AddHabitModal

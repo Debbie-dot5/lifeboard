@@ -74,9 +74,18 @@ const WeeklyStatsCard = ({
   const streakProgress = Math.min(readingStreak / 30, 1)
 
   return (
-    <div className="relative bg-[#13131F] rounded-2xl border border-white/[0.06] p-6 hover:border-white/10 transition-all duration-200">
+    <div
+      className="relative rounded-2xl p-4 md:p-5 lg:p-6 transition-all duration-200"
+      style={{
+        background: "rgba(255, 255, 255, 0.03)",
+        border: "1px solid rgba(255,255,255,0.07)",
+        backdropFilter: "blur(24px)",
+        WebkitBackdropFilter: "blur(24px)",
+        boxShadow: "0 8px 32px rgba(0,0,0,0.3), inset 0 1px 0 rgba(255,255,255,0.07)",
+      }}
+    >
       {/* Header */}
-      <div className="flex items-center justify-between border-b border-white/5 pb-3 mb-5">
+      <div className="flex items-center justify-between pb-3 mb-5" style={{ borderBottom: "1px solid rgba(255,255,255,0.05)", background: "linear-gradient(180deg, rgba(255,255,255,0.03) 0%, transparent 100%)" }}>
         <h3 className="font-semibold text-white">This Week</h3>
         <span className="text-xs text-white/30">
           {weekStart} &ndash; {weekEnd}
@@ -86,8 +95,8 @@ const WeeklyStatsCard = ({
       {/* 4 stat blocks */}
       <div className="grid grid-cols-2 lg:grid-cols-4 gap-4">
         {/* Tasks */}
-        <div className="bg-white/[0.03] rounded-xl p-4">
-          <p className="text-2xl font-bold text-white">
+        <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", backdropFilter: "blur(10px)" }}>
+          <p className="font-mono text-2xl font-bold text-white">
             {weeklyStats.completed}
           </p>
           <p className="text-xs text-white/40 mb-3">
@@ -122,8 +131,8 @@ const WeeklyStatsCard = ({
         </div>
 
         {/* Habits */}
-        <div className="bg-white/[0.03] rounded-xl p-4">
-          <p className="text-2xl font-bold text-white">{habitConsistency}%</p>
+        <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", backdropFilter: "blur(10px)" }}>
+          <p className="font-mono text-2xl font-bold text-white">{habitConsistency}%</p>
           <p className="text-xs text-white/40 mb-3">consistency today</p>
           <div className="flex items-center gap-1.5">
             {habitsToday.slice(0, 7).map((habit) => (
@@ -145,8 +154,8 @@ const WeeklyStatsCard = ({
         </div>
 
         {/* Journal */}
-        <div className="bg-white/[0.03] rounded-xl p-4">
-          <p className="text-2xl font-bold text-white">
+        <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", backdropFilter: "blur(10px)" }}>
+          <p className="font-mono text-2xl font-bold text-white">
             {journalEntriesThisWeek.length}
           </p>
           <p className="text-xs text-white/40 mb-3">entries this week</p>
@@ -167,8 +176,8 @@ const WeeklyStatsCard = ({
         </div>
 
         {/* Reading */}
-        <div className="bg-white/[0.03] rounded-xl p-4">
-          <p className="text-2xl font-bold text-white">{readingStreak}</p>
+        <div className="rounded-xl p-4" style={{ background: "rgba(255,255,255,0.03)", border: "1px solid rgba(255,255,255,0.06)", backdropFilter: "blur(10px)" }}>
+          <p className="font-mono text-2xl font-bold text-white">{readingStreak}</p>
           <p className="text-xs text-white/40 mb-3">day reading streak</p>
           <div className="flex items-center justify-center">
             <svg width="48" height="48" viewBox="0 0 48 48">

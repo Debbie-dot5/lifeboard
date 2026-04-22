@@ -19,7 +19,7 @@ const MoodSelector = ({
   onChange: (mood: MoodType | null) => void
 }) => {
   return (
-    <div className="flex items-center gap-2">
+    <div className="flex items-center gap-2 overflow-x-auto flex-nowrap pb-1">
       {MOODS.map(({ value: mood, label, icon: Icon, color, ring }) => {
         const isSelected = value === mood
         return (
@@ -27,7 +27,7 @@ const MoodSelector = ({
             key={mood}
             type="button"
             onClick={() => onChange(isSelected ? null : mood)}
-            className={`flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all ${
+            className={`flex-shrink-0 flex items-center gap-1.5 px-3 py-1.5 rounded-lg text-sm transition-all ${
               isSelected
                 ? `${color} bg-white/10 ring-2 ${ring}`
                 : "text-white/40 hover:text-white/60 hover:bg-white/5"

@@ -1,11 +1,13 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
+import { Trash2 } from "lucide-react"
 import type { BookWithProgress } from "@lifeboard/lib"
 
 type Props = {
   book: BookWithProgress
   onClick: () => void
+  onDelete?: (book: BookWithProgress) => void
   size?: "sm" | "md" | "lg"
 }
 
@@ -29,9 +31,25 @@ const sizeConfig = {
   lg: { width: 160, height: 220, fontSize: "text-sm", authorSize: "text-xs", spineWidth: 20 },
 }
 
-const BookSpine = ({ book, onClick, size = "md" }: Props) => {
+const sizeConfigMobile = {
+  sm: { width: 80, height: 112, fontSize: "text-[10px]", authorSize: "text-[8px]", spineWidth: 10 },
+  md: { width: 90, height: 130, fontSize: "text-[10px]", authorSize: "text-[8px]", spineWidth: 12 },
+  lg: { width: 120, height: 170, fontSize: "text-xs", authorSize: "text-[10px]", spineWidth: 14 },
+}
+
+const BookSpine = ({ book, onClick, onDelete, size = "md" }: Props) => {
   const [isHovered, setIsHovered] = useState(false)
-  const config = sizeConfig[size]
+  const [confirming, setConfirming] = useState(false)
+  const [isMobile, setIsMobile] = useState(false)
+
+  useEffect(() => {
+    const update = () => setIsMobile(window.innerWidth < 768)
+    update()
+    window.addEventListener("resize", update)
+    return () => window.removeEventListener("resize", update)
+  }, [])
+
+  const config = isMobile ? sizeConfigMobile[size] : sizeConfig[size]
   const bgColor = getBookColor(book.title)
 
   const progress =
@@ -41,13 +59,29 @@ const BookSpine = ({ book, onClick, size = "md" }: Props) => {
 
   const isFinished = progress >= 100
 
+  const handleDeleteClick = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setConfirming(true)
+  }
+
+  const handleConfirmDelete = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    onDelete?.(book)
+    setConfirming(false)
+  }
+
+  const handleCancelDelete = (e: React.MouseEvent) => {
+    e.stopPropagation()
+    setConfirming(false)
+  }
+
   return (
     <div
       className="relative cursor-pointer group"
       style={{ width: config.width, perspective: "800px" }}
-      onClick={onClick}
+      onClick={confirming ? undefined : onClick}
       onMouseEnter={() => setIsHovered(true)}
-      onMouseLeave={() => setIsHovered(false)}
+      onMouseLeave={() => { setIsHovered(false); setConfirming(false) }}
     >
       <div
         className="relative rounded-sm overflow-hidden"
@@ -109,7 +143,7 @@ const BookSpine = ({ book, onClick, size = "md" }: Props) => {
         )}
 
         {/* Progress bar at bottom */}
-        {progress > 0 && (
+        {progress > 0 && !confirming && (
           <div className="absolute bottom-0 left-0 right-0 h-[3px] bg-black/30">
             <div
               className="h-full transition-all duration-300"
@@ -127,6 +161,60 @@ const BookSpine = ({ book, onClick, size = "md" }: Props) => {
             <svg className="w-3 h-3 text-white" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={3}>
               <path strokeLinecap="round" strokeLinejoin="round" d="M5 13l4 4L19 7" />
             </svg>
+          </div>
+        )}
+
+        {/* Delete button — appears on hover */}
+        {onDelete && isHovered && !confirming && (
+          <button
+            onClick={handleDeleteClick}
+            className="absolute top-1.5 left-1.5 w-6 h-6 rounded-full flex items-center justify-center z-10 transition-all"
+            style={{
+              background: "rgba(239,68,68,0.8)",
+              border: "1px solid rgba(239,68,68,0.6)",
+              boxShadow: "0 2px 8px rgba(239,68,68,0.4)",
+            }}
+            title="Delete book"
+          >
+            <Trash2 size={12} className="text-white" />
+          </button>
+        )}
+
+        {/* Inline delete confirmation overlay */}
+        {confirming && (
+          <div
+            className="absolute inset-0 flex flex-col items-center justify-center gap-2 z-20"
+            style={{
+              background: "rgba(10,8,20,0.92)",
+              backdropFilter: "blur(4px)",
+            }}
+          >
+            <p className="text-[10px] text-white/70 font-medium text-center px-2">
+              Delete this book?
+            </p>
+            <div className="flex gap-1.5">
+              <button
+                onClick={handleCancelDelete}
+                className="px-2.5 py-1 rounded text-[10px] font-medium text-white/60 hover:text-white transition-colors"
+                style={{
+                  background: "rgba(255,255,255,0.08)",
+                  border: "1px solid rgba(255,255,255,0.12)",
+                }}
+              >
+                Cancel
+              </button>
+              <button
+                onClick={handleConfirmDelete}
+                className="px-2.5 py-1 rounded text-[10px] font-medium text-white transition-colors"
+                style={{
+                  background: "rgba(239,68,68,0.7)",
+                  border: "1px solid rgba(239,68,68,0.5)",
+                  boxShadow: "0 2px 8px rgba(239,68,68,0.3)",
+                }}
+              >
+                Delete
+              </button>
+            </div>
           </div>
         )}
       </div>

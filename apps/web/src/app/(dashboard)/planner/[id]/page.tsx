@@ -118,7 +118,7 @@ const PlanDetailPage = () => {
   }
 
   return (
-    <div className="p-8 h-full flex flex-col">
+    <div className="p-4 md:p-6 lg:p-8 pt-20 md:pt-6 lg:pt-8 h-full flex flex-col">
       {/* Header */}
       <div className="mb-6">
         {/* Back + actions */}

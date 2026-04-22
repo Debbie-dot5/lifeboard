@@ -199,9 +199,9 @@ const JournalEditorPage = ({ entryId }: { entryId?: string }) => {
   const saveLabel = saveStatus === "saving" ? "Saving..." : saveStatus === "saved" ? "Saved" : "Save"
 
   return (
-    <div className="p-8">
+    <div className="p-4 md:p-6 lg:p-8 pt-20 md:pt-6 lg:pt-8 pb-24 md:pb-6 lg:pb-8">
       {/* Header */}
-      <div className="flex items-center justify-between mb-8">
+      <div className="flex items-center justify-between mb-6 md:mb-8">
         <button
           onClick={() => router.push("/journal")}
           className="flex items-center gap-2 text-white/40 hover:text-white transition-colors text-sm"
@@ -214,16 +214,16 @@ const JournalEditorPage = ({ entryId }: { entryId?: string }) => {
             <button
               onClick={handleDelete}
               disabled={isDeleting}
-              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-red-400/60 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors"
+              className="flex items-center gap-1.5 px-3 py-1.5 text-sm text-red-400/60 hover:text-red-400 hover:bg-red-400/10 rounded-lg transition-colors min-h-11"
             >
               <Trash2 size={14} />
-              Delete
+              <span className="hidden md:inline">Delete</span>
             </button>
           )}
           <button
             onClick={handleManualSave}
             disabled={isSaving}
-            className="px-4 py-2 bg-[#6C47FF] text-white text-sm font-medium rounded-lg hover:bg-[#5835FF] disabled:opacity-40 disabled:cursor-not-allowed transition-colors"
+            className="hidden md:inline-flex px-4 py-2 bg-[#6C47FF] text-white text-sm font-medium rounded-lg hover:bg-[#5835FF] disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-11"
           >
             {saveLabel}
           </button>
@@ -236,7 +236,7 @@ const JournalEditorPage = ({ entryId }: { entryId?: string }) => {
         placeholder="Untitled"
         value={title}
         onChange={(e) => handleTitleChange(e.target.value)}
-        className="w-full bg-transparent text-3xl font-bold text-white placeholder-white/20 focus:outline-none mb-4"
+        className="w-full bg-transparent text-2xl md:text-3xl font-bold text-white placeholder-white/20 focus:outline-none mb-4"
       />
 
       {/* Mood */}
@@ -254,6 +254,20 @@ const JournalEditorPage = ({ entryId }: { entryId?: string }) => {
           />
         </div>
       )}
+
+      {/* Mobile fixed save bar */}
+      <div
+        className="md:hidden fixed bottom-0 inset-x-0 z-40 p-3 safe-bottom glass-strong"
+        style={{ borderTop: "1px solid rgba(255,255,255,0.08)" }}
+      >
+        <button
+          onClick={handleManualSave}
+          disabled={isSaving}
+          className="w-full py-3 bg-[#6C47FF] text-white text-sm font-medium rounded-lg hover:bg-[#5835FF] disabled:opacity-40 disabled:cursor-not-allowed transition-colors min-h-11"
+        >
+          {saveLabel}
+        </button>
+      </div>
     </div>
   )
 }

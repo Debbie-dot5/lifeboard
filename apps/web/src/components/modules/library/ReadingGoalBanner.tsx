@@ -15,10 +15,10 @@ const ReadingGoalBanner = ({ yearlyProgress, monthlyProgress, readingStreak, onS
 
   if (!yearlyProgress && !monthlyProgress) {
     return (
-      <div className="bg-amber-950/30 border border-amber-800/30 rounded-xl p-5">
-        <div className="flex items-center justify-between">
+      <div className="bg-amber-950/30 border border-amber-800/30 rounded-xl p-4 md:p-5">
+        <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3 md:gap-0">
           <div className="flex items-center gap-3">
-            <div className="w-10 h-10 rounded-full bg-amber-900/40 flex items-center justify-center">
+            <div className="w-10 h-10 rounded-full bg-amber-900/40 flex items-center justify-center flex-shrink-0">
               <Target className="w-5 h-5 text-amber-400" />
             </div>
             <div>
@@ -32,7 +32,7 @@ const ReadingGoalBanner = ({ yearlyProgress, monthlyProgress, readingStreak, onS
           </div>
           <button
             onClick={onSetGoal}
-            className="px-4 py-1.5 bg-amber-600 text-white text-xs font-medium rounded-lg hover:bg-amber-500 transition-colors"
+            className="px-4 py-2 md:py-1.5 bg-amber-600 text-white text-xs font-medium rounded-lg hover:bg-amber-500 transition-colors w-full md:w-auto"
           >
             Set Goal
           </button>
@@ -42,8 +42,8 @@ const ReadingGoalBanner = ({ yearlyProgress, monthlyProgress, readingStreak, onS
   }
 
   return (
-    <div className="bg-amber-950/30 border border-amber-800/30 rounded-xl p-5">
-      <div className="flex items-center justify-between mb-3">
+    <div className="bg-amber-950/30 border border-amber-800/30 rounded-xl p-4 md:p-5">
+      <div className="flex items-center justify-between mb-3 flex-wrap gap-2">
         <div className="flex items-center gap-2">
           <Target className="w-4 h-4 text-amber-400" />
           <span className="text-sm font-medium text-amber-100">Reading Goals</span>

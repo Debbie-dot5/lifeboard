@@ -87,10 +87,10 @@ const UploadBookModal = ({ isOpen, onClose, onUpload, isPending }: Props) => {
   const fileType = file?.name.endsWith(".epub") ? "epub" : "pdf"
 
   return (
-    <div className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4">
-      <div className="bg-[#1A1A2E] border border-white/10 rounded-2xl p-6 w-full max-w-md">
+    <div className="fixed inset-0 z-50 flex items-center justify-center p-4" style={{ background: "rgba(5, 5, 16, 0.75)", backdropFilter: "blur(12px)", WebkitBackdropFilter: "blur(12px)" }}>
+      <div className="rounded-2xl p-6 w-full max-w-md" style={{ background: "rgba(15, 12, 30, 0.85)", border: "1px solid rgba(255,255,255,0.1)", backdropFilter: "blur(40px)", WebkitBackdropFilter: "blur(40px)", boxShadow: "0 24px 64px rgba(0,0,0,0.6), inset 0 1px 0 rgba(255,255,255,0.1), inset 0 -1px 0 rgba(0,0,0,0.2), 0 0 0 1px rgba(108,71,255,0.1)" }}>
         {/* Header */}
-        <div className="flex items-center justify-between mb-6">
+        <div className="flex items-center justify-between mb-6" style={{ borderBottom: "1px solid rgba(255,255,255,0.06)", paddingBottom: "16px", background: "linear-gradient(180deg, rgba(108,71,255,0.06) 0%, transparent 100%)" }}>
           <h2 className="text-lg font-semibold text-white">Add to Library</h2>
           <button
             onClick={handleClose}
@@ -173,7 +173,7 @@ const UploadBookModal = ({ isOpen, onClose, onUpload, isPending }: Props) => {
                   setValidationError("")
                 }}
                 placeholder="Book title"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/20 focus:border-[#6C47FF] focus:outline-none transition-colors"
+                className="w-full rounded-lg px-3 py-2 text-sm text-white placeholder-white/20 glass-input"
               />
             </div>
 
@@ -185,7 +185,7 @@ const UploadBookModal = ({ isOpen, onClose, onUpload, isPending }: Props) => {
                 value={author}
                 onChange={(e) => setAuthor(e.target.value)}
                 placeholder="Author name"
-                className="w-full bg-white/5 border border-white/10 rounded-lg px-3 py-2 text-sm text-white placeholder-white/20 focus:border-[#6C47FF] focus:outline-none transition-colors"
+                className="w-full rounded-lg px-3 py-2 text-sm text-white placeholder-white/20 glass-input"
               />
             </div>
           </>
@@ -206,7 +206,8 @@ const UploadBookModal = ({ isOpen, onClose, onUpload, isPending }: Props) => {
           <button
             onClick={handleSubmit}
             disabled={isPending || !file}
-            className="flex-1 px-4 py-2 bg-[#6C47FF] text-white text-sm font-medium rounded-lg hover:bg-[#5835FF] transition-colors disabled:opacity-50"
+            className="flex-1 px-4 py-2 text-white text-sm font-medium rounded-lg transition-all disabled:opacity-50"
+            style={{ background: "linear-gradient(135deg, rgba(108,71,255,0.9), rgba(79,47,224,0.9))", border: "1px solid rgba(108,71,255,0.5)", boxShadow: "0 4px 20px rgba(108,71,255,0.3), inset 0 1px 0 rgba(255,255,255,0.2)" }}
           >
             {isPending ? "Uploading..." : "Add to Library"}
           </button>

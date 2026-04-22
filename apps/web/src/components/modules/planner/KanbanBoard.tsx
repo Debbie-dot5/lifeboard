@@ -180,7 +180,7 @@ const MilestoneColumn = ({
   }
 
   return (
-    <div className="flex-shrink-0 w-[280px] bg-[#13131F] border border-white/5 rounded-xl flex flex-col max-h-full">
+    <div className="flex-shrink-0 w-[240px] md:w-[280px] bg-[#13131F] border border-white/5 rounded-xl flex flex-col max-h-full">
       {/* Column header */}
       <div className="p-3 border-b border-white/5">
         <div className="flex items-center justify-between mb-1">
@@ -365,7 +365,7 @@ const KanbanBoard = ({
 
         {/* Add milestone button */}
         {showAddMilestone ? (
-          <div className="flex-shrink-0 w-[280px] bg-[#13131F] border border-dashed border-[#6C47FF]/30 rounded-xl p-3">
+          <div className="flex-shrink-0 w-[240px] md:w-[280px] bg-[#13131F] border border-dashed border-[#6C47FF]/30 rounded-xl p-3">
             <input
               autoFocus
               value={newMilestoneTitle}
